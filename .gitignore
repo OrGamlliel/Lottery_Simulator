@@ -1,0 +1,11 @@
+.vs/finalProjectC/v16/Browse.VC.opendb
+.vs/finalProjectC/v16/Browse.VC.db-wal
+.vs/finalProjectC/v16/Browse.VC.db-shm
+*.db
+*.suo
+*.user
+*.ipch
+*.log
+*.idb
+*.pdb
+*.tlog
