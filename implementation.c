@@ -8,7 +8,7 @@ typedef struct col{
     int* chosenNumbers;
 } Col;
 
-typedef struct collistNode { //
+typedef struct collistNode { 
     Col* data;
     struct listNode* next;//ptr to the next col
 } colListNode;
