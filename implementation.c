@@ -3,6 +3,8 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
+#define MANUAL 1
+#define AUTO 2
 
 typedef struct col{
     int* chosenNumbers;
@@ -71,6 +73,7 @@ void getParticipants()
 
     colList colLst;
     int numOfParticipants;
+    int lotteryMode;
     int i;
     char* name;
 
@@ -79,10 +82,37 @@ void getParticipants()
     
     for (i = 0; i < numOfParticipants; i++)
     {
-        scanf("%s", &name);
+        scanf("%s", name);
         makeEmptyColList(&colLst);
         currData = createDataForParticipant(name, colLst);
-        insertDataToEndPList(pLst, currData);
+        insertPDataToEndPList(pLst, currData);
+        lotteryMode = getLotteryMode();
+    }
+}
+
+int getLotteryMode()
+{
+    int lotteryMode;
+    printf("1. Manual lottery\n");
+    printf("2. Auto lottery\n");
+    scanf("%d", &lotteryMode);
+    return lotteryMode;
+}
+void getCols(int lotteryMode)
+{
+    int N; //desired num of columns
+    printf("Please enter desired number of columns\n");
+    scanf("%d", &N);
+    switch (lotteryMode)
+    {
+    case MANUAL:
+
+        break;
+    case AUTO:
+
+        break;
+    default:
+        break;
     }
 }
 
@@ -122,19 +152,38 @@ Participant* createNewParticipant(Data* participantData, Participant* next)
     return result;
 }
 
-void insertDataToStartPList(pList* pList, Data* participantData)
+void insertPDataToEndPList(pList* pList, Data* participantData)
+{
+    Participant* newTail;
+    newTail = createNewParticipant(participantData, NULL);
+    insertPNodeToEndList(pList, newTail);
+}
+
+void insertPNodeToEndList(pList* pList, Participant* newTail)
+{
+    newTail->next = NULL;
+
+    if (isEmptyPList(*pList))
+    {
+        pList->head = pList->tail = newTail;
+    }
+    else
+    {
+        pList->tail->next = newTail;
+        pList->tail = newTail;
+    }
+}
+
+
+
+void insertDataToStartPList(pList* pList, Data* participantData) //insert data to start p list
 {
     Participant* newHead;
     newHead = createNewParticipant(participantData, NULL);
     insertParticipantToHead(pList, newHead);
 }
-void insertDataToEndPList(pList* pList, Data* participantData)
-{
-    Participant* newTail;
-    newTail = createNewParticipant(participantData, NULL);
-    insertParticipantToEndList(pList, newTail);
-}
-void insertParticipantToHead(pList* pList, Participant* newHead)
+
+void insertParticipantToHead(pList* pList, Participant* newHead) //insert node to start p list
 {
     newHead->next = pList->head;
     if (pList->tail == NULL)
@@ -142,18 +191,8 @@ void insertParticipantToHead(pList* pList, Participant* newHead)
     pList->head = newHead;
 }
 
-void insertParticipantToEndList(pList* pList, Participant* newTail)
-{
-    newTail->next = NULL;
 
-    if (isEmptyPList(*pList))
-        pList->head = pList->tail = newTail;
-    else
-    {
-        pList->tail->next = newTail;
-        pList->tail = newTail;
-    }
-}
+
 
 void printPList(pList pList)
 {
@@ -209,7 +248,9 @@ void insertNodeToHead(colList* colList, colListNode* newHead)
 {
     newHead->next = colList->head;
     if (colList->tail == NULL)
+    {
         colList->tail = newHead;
+    }
     colList->head = newHead;
 }
 
@@ -217,7 +258,7 @@ void insertNodeToEndList(colList* colList, colListNode* newTail)
 {
     newTail->next = NULL;
 
-    if (isEmptyList(*lst))
+    if (isEmptyList(*colList))
         colList->head = colList->tail = newTail;
     else
     {
