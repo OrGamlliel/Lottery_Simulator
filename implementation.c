@@ -132,7 +132,7 @@ void insertDataToEndPList(pList* pList, Data* participantData)
 {
     Participant* newTail;
     newTail = createNewParticipant(participantData, NULL);
-    insertParticipantToTail(pList, newTail);
+    insertParticipantToEndList(pList, newTail);
 }
 void insertParticipantToHead(pList* pList, Participant* newHead)
 {
@@ -142,7 +142,7 @@ void insertParticipantToHead(pList* pList, Participant* newHead)
     pList->head = newHead;
 }
 
-void insertParticipantToTail(pList* pList, Participant* newTail)
+void insertParticipantToEndList(pList* pList, Participant* newTail)
 {
     newTail->next = NULL;
 
@@ -213,16 +213,16 @@ void insertNodeToHead(colList* colList, colListNode* newHead)
     colList->head = newHead;
 }
 
-void insertNodeToTail(colList* lst, colListNode* newTail)
+void insertNodeToEndList(colList* colList, colListNode* newTail)
 {
     newTail->next = NULL;
 
     if (isEmptyList(*lst))
-        lst->head = lst->tail = newTail;
+        colList->head = colList->tail = newTail;
     else
     {
-        lst->tail->next = newTail;
-        lst->tail = newTail;
+        colList->tail->next = newTail;
+        colList->tail = newTail;
     }
 }
 
