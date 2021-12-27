@@ -61,6 +61,7 @@ void checkMemoryAllocation(void* ptr);
 int* getAutomaticCol();
 void firstOption();
 bool isDifferent(Col arr, int val, int index);
+void getListFromUser(colList* lstC, int* numOfCols);
 
 void main() 
 {
@@ -364,6 +365,26 @@ void checkMemoryAllocation(void* ptr)
         exit(1);
     }
 }
+void getListFromUser(colList* lstC, int* numOfCols)
+{
+    int currChosenNum;
+    Col currCol;
+
+    for (int i = 0; i < numOfCols; i++)
+    {
+        for (int j = 0; j < MAX_NUM_IN_COLS; j++)//fill one col
+        {
+            scanf("%d", &currChosenNum);
+            if (isDifferent(currCol, currChosenNum, j))
+            {
+                currCol[j] = currChosenNum;
+            }
+        }
+        insertDataToEndList(lstC, &currCol);
+    }
+    //ToDo: Or will add creation of list
+}
+
 bool isDifferent(Col arr, int val, int index)
 {
     int i;
