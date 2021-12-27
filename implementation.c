@@ -317,6 +317,13 @@ void insertNodeToEndList(colList* colList, colListNode* newTail)
     }
 }
 
+void insertDataToEndList(colList* colList, int* col)
+{
+    colListNode* newTail;
+    newTail = createNode(col, NULL);
+    insertNodeToEndList(colList, newTail);
+}
+
 void printList(colList colList)
 {
     colListNode* p;
