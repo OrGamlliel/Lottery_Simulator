@@ -65,6 +65,7 @@ void main()
     printf("1. Enter number of participants\n");
     printf("2. View latest lottery results\n");
     printf("3. Exit\n");
+    scanf("%d", &userChoice);
 
     switch (userChoice)
     {
