@@ -107,12 +107,36 @@ void getParticipants()
     
     for (i = 0; i < numOfParticipants; i++)
     {
-        scanf("%s", name);
+        name = getName();
         makeEmptyColList(&colLst);
         currData = createDataForParticipant(name, colLst);
         insertPDataToEndPList(pLst, currData);
         lotteryMode = getLotteryMode();
     }
+}
+
+char* getName()
+{
+    int logSize = 0;
+    int phsSize = 2;
+    char c;
+
+    char* name = (char*)malloc(sizeof(char) * phsSize);
+    printf("Please enter participant name:\n");
+    c = getchar();
+    while(c!='\n')
+    {
+        if (logSize >= phsSize-1)
+        {
+            phsSize *= 2;
+            name = (char*)realloc(name, sizeof(char) * phsSize);
+        }
+        name[logSize++] = c;
+    }
+    if (logSize != phsSize)
+        name = (char*)realloc(name, sizeof(char) * logSize);
+
+    return name;
 }
 
 int getLotteryMode()
