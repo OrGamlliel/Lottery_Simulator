@@ -110,7 +110,7 @@ void getParticipants()
     
     for (i = 0; i < numOfParticipants; i++)
     {
-        name = getName();
+        name = getName(); //ToDo: fix
         makeEmptyColList(&colLst);
         currData = createDataForParticipant(name, colLst);
         insertPDataToEndPList(pLst, currData);
