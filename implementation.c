@@ -365,6 +365,31 @@ void checkMemoryAllocation(void* ptr)
         exit(1);
     }
 }
+
+int* getAutomaticCol()
+{
+    int numsPool[15]; //Will contain all the possible number options
+    int* col = (int*)malloc(sizeof(int) * 6); //Will contain the selected col
+    int i;
+    int randomCell; //Will be used to select a random cell from numPools
+
+    for (i = 0; i < 15; i++)
+        numsPool[i] = i + 1;
+
+    for (i = 0; i < 6; )
+    {
+        srand(time(NULL));
+        randomCell = rand() % 15;
+
+        if (numsPool[randomCell] != 0)          //Verify that the random number wasn't selected before
+        { 
+            col[i++] = numsPool[randomCell];
+            numsPool[randomCell] = 0;
+        }
+    }
+    return col;
+}
+
 void getListFromUser(colList* lstC, int* numOfCols)
 {
     int currChosenNum;
