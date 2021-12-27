@@ -2,16 +2,20 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <stdlib.h>
+#include <time.h>
 
 #define MANUAL 1
 #define AUTO 2
+#define MAX_NUM_IN_COLS 6
 
-typedef struct col{
-    int* chosenNumbers;
-} Col;
+typedef int Col[MAX_NUM_IN_COLS];
+
+//typedef struct col{
+//    int* chosenNumbers;
+//} Col;
 
 typedef struct collistNode { 
-    Col* data;
+    Col* col;             //col is a ptr to array
     struct listNode* next;//ptr to the next col
 } colListNode;
 
@@ -287,7 +291,7 @@ colListNode* createNode(Col* data, colListNode* next)
     result = (colListNode*)malloc(sizeof(colListNode));
     checkMemoryAllocation(result);
 
-    result->data = data;
+    result->col = data;
     result->next = next;
 
     return result;
