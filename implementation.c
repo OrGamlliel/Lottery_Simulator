@@ -60,6 +60,7 @@ void freeList(colList colList);
 void checkMemoryAllocation(void* ptr);
 int* getAutomaticCol();
 void firstOption();
+bool isDifferent(Col arr, int val, int index);
 
 void main() 
 {
@@ -362,4 +363,18 @@ void checkMemoryAllocation(void* ptr)
         printf("Memory allocation has failed");
         exit(1);
     }
+}
+bool isDifferent(Col arr, int val, int index)
+{
+    int i;
+    bool isdiff = true;
+
+    for (i = 0; i < index && isdiff; i++)
+    {
+        if (arr[i] == val)
+        {
+            isdiff = false;
+        }
+    }
+    return isdiff;
 }
