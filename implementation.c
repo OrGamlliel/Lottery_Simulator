@@ -37,6 +37,25 @@ typedef struct pList {
     Participant* tail;
 } pList;
 
+void getParticipants();
+int getLotteryMode();
+void getCols(colList* colLst, int lotteryMode);
+void makeEmptyPList(pList* plst);
+void makeEmptyColList(colList* colst);
+bool isEmptyPList(pList pList);
+void insertDataToEndList(colList* colList, int* col);
+Data* createDataForParticipant(char* name, colList cols);
+char* getName();
+Participant* createNewParticipant(Data* participantData, Participant* next);
+void insertPDataToEndPList(pList* pList, Data* participantData);
+void insertPNodeToEndList(pList* pList, Participant* newTail);
+void insertDataToStartPList(pList* pList, Data* participantData);
+void insertParticipantToHead(pList* pList, Participant* newHead);
+void printPList(pList pList);
+void freeList(colList colList);
+void checkMemoryAllocation(void* ptr);
+int* getAutomaticCol();
+void firstOption();
 
 void main() 
 {
