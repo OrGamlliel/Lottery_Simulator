@@ -60,7 +60,6 @@ void firstOption();
 void main() 
 {
     int userChoice;
-    int numOfParticipants;
 
     printf("Please choose one of the following option:\n");
     printf("1. Enter number of participants\n");
@@ -70,7 +69,6 @@ void main()
     switch (userChoice)
     {
     case 1:
-        scanf("%d", &numOfParticipants);
         firstOption();
         break;
     case 2:
