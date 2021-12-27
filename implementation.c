@@ -111,6 +111,7 @@ void getParticipants()
         currData = createDataForParticipant(name, colLst);
         insertPDataToEndPList(pLst, currData);
         lotteryMode = getLotteryMode();
+        getCols(&colLst, getLotteryMode());
     }
 }
 
@@ -146,7 +147,7 @@ int getLotteryMode()
     scanf("%d", &lotteryMode);
     return lotteryMode;
 }
-void getCols(int lotteryMode)
+void getCols(colList* colLst, int lotteryMode)
 {
     int N; //desired num of columns
     printf("Please enter desired number of columns\n");
@@ -157,7 +158,8 @@ void getCols(int lotteryMode)
 
         break;
     case AUTO:
-
+        for (int col = 0; col < N; col++)
+            insertDataToEndList(colLst, getAutomaticCol());
         break;
     default:
         break;
