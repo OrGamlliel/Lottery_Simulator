@@ -91,7 +91,7 @@ void firstOption()
 
 void getParticipants()
 {
-    pList* pLst;
+    pList* pLst = (pList*)malloc(sizeof(pList));
     makeEmptyPList(pLst); //make empty participants list
 
     Data* currData;
