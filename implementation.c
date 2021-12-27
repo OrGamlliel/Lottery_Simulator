@@ -83,6 +83,12 @@ void main()
     }
 
 }
+
+void firstOption()
+{
+    getParticipants();
+}
+
 void getParticipants()
 {
     pList* pLst;
