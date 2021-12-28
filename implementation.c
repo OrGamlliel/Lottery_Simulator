@@ -1,67 +1,22 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
-#include <stdbool.h>
-#include <stdlib.h>
 #include <time.h>
+#include "colList.h"
+#include "participants.h"
+#include "utils.h"
 
 #define MANUAL 1
 #define AUTO 2
-#define MAX_NUM_IN_COLS 6
-
-typedef int Col[MAX_NUM_IN_COLS];
-
-//typedef struct col{
-//    int* chosenNumbers;
-//} Col;
-
-typedef struct collistNode { 
-    Col* col;             //col is a ptr to array
-    struct listNode* next;//ptr to the next col
-} colListNode;
-
-typedef struct colList {
-    colListNode* head;
-    colListNode* tail;
-} colList;
-
-typedef struct data
-{
-    char* name;
-    colList cols;
-} Data;
-
-typedef struct participant
-{
-    Data* data;
-    struct participant* next;//ptr to the next participant
-} Participant;
-
-typedef struct pList {
-    Participant* head;
-    Participant* tail;
-} pList;
 
 void getParticipants();
 int getLotteryMode();
 void getCols(colList* colLst, int lotteryMode);
-void makeEmptyPList(pList* plst);
-void makeEmptyColList(colList* colst);
-bool isEmptyPList(pList pList);
-void insertDataToEndList(colList* colList, int* col);
-Data* createDataForParticipant(char* name, colList cols);
 char* getName();
-Participant* createNewParticipant(Data* participantData, Participant* next);
-void insertPDataToEndPList(pList* pList, Data* participantData);
-void insertPNodeToEndList(pList* pList, Participant* newTail);
-void insertDataToStartPList(pList* pList, Data* participantData);
-void insertParticipantToHead(pList* pList, Participant* newHead);
-void printPList(pList pList);
 void freeList(colList colList);
 void checkMemoryAllocation(void* ptr);
-int* getAutomaticCol();
 void firstOption();
-bool isDifferent(Col arr, int val, int index);
 void getListFromUser(colList* lstC, int* numOfCols);
+
 
 void main() 
 {
@@ -172,190 +127,6 @@ void getCols(colList* colLst, int lotteryMode)
     }
 }
 
-void makeEmptyPList(pList* plst)
-{
-    plst->head = plst->tail = NULL;
-}
-
-bool isEmptyPList(pList pList)
-{
-    return (pList.head == NULL);
-}
-
-Data* createDataForParticipant(char* name, colList cols)
-{
-    Data* result;
-
-    result = (Data*)malloc(sizeof(Data));
-    checkMemoryAllocation(result);
-
-    result->name = name;
-    result->cols = cols;
-
-    return result;
-}
-
-Participant* createNewParticipant(Data* participantData, Participant* next)
-{
-    Participant* result;
-
-    result = (Participant*)malloc(sizeof(Participant));
-    checkMemoryAllocation(result);
-
-    result->data = participantData;
-    result->next = next;
-
-    return result;
-}
-
-void insertPDataToEndPList(pList* pList, Data* participantData)
-{
-    Participant* newTail;
-    newTail = createNewParticipant(participantData, NULL);
-    insertPNodeToEndList(pList, newTail);
-}
-
-void insertPNodeToEndList(pList* pList, Participant* newTail)
-{
-    newTail->next = NULL;
-
-    if (isEmptyPList(*pList))
-    {
-        pList->head = pList->tail = newTail;
-    }
-    else
-    {
-        pList->tail->next = newTail;
-        pList->tail = newTail;
-    }
-}
-
-
-
-void insertDataToStartPList(pList* pList, Data* participantData) //insert data to start p list
-{
-    Participant* newHead;
-    newHead = createNewParticipant(participantData, NULL);
-    insertParticipantToHead(pList, newHead);
-}
-
-void insertParticipantToHead(pList* pList, Participant* newHead) //insert node to start p list
-{
-    newHead->next = pList->head;
-    if (pList->tail == NULL)
-        pList->tail = newHead;
-    pList->head = newHead;
-}
-
-
-
-
-void printPList(pList pList)
-{
-    Participant* p;
-
-    for (p = pList.head; p != NULL; p = p->next)
-        //printf ("%d\n",p->data); toDo
-        printf("\n");
-}
-
-void freePList(pList pList)
-{
-    Participant* p, * q;
-
-    if (isEmptyPList(pList))
-        return;
-
-    p = pList.head;
-
-    while (p->next != NULL)
-    {
-        q = p;
-        p = p->next;
-        free(q);
-    }
-    free(p);
-}
-void makeEmptyColList(colList* colst)
-{
-    colst->head = colst->tail = NULL;
-}
-
-bool isEmptyList(colList colList)
-{
-    return (colList.head == NULL);
-}
-
-colListNode* createNode(Col* data, colListNode* next)
-{
-    colListNode* result;
-
-    result = (colListNode*)malloc(sizeof(colListNode));
-    checkMemoryAllocation(result);
-
-    result->col = data;
-    result->next = next;
-
-    return result;
-}
-
-
-void insertNodeToHead(colList* colList, colListNode* newHead)
-{
-    newHead->next = colList->head;
-    if (colList->tail == NULL)
-    {
-        colList->tail = newHead;
-    }
-    colList->head = newHead;
-}
-
-void insertNodeToEndList(colList* colList, colListNode* newTail)
-{
-    newTail->next = NULL;
-
-    if (isEmptyList(*colList))
-        colList->head = colList->tail = newTail;
-    else
-    {
-        colList->tail->next = newTail;
-        colList->tail = newTail;
-    }
-}
-
-void insertDataToEndList(colList* colList, int* col)
-{
-    colListNode* newTail;
-    newTail = createNode(col, NULL);
-    insertNodeToEndList(colList, newTail);
-}
-
-void printList(colList colList)
-{
-    colListNode* p;
-
-    for (p = colList.head; p != NULL; p = p->next)
-        //printf ("%d\n",p->data); toDo
-        printf("\n");
-}
-
-void freeList(colList colList)
-{
-    colListNode* p, * q;
-
-    if (isEmptyList(colList))
-        return;
-
-    p = colList.head;
-
-    while (p->next != NULL)
-    {
-        q = p;
-        p = p->next;
-        free(q);
-    }
-    free(p);
-}
 
 void checkMemoryAllocation(void* ptr)
 {
@@ -366,29 +137,6 @@ void checkMemoryAllocation(void* ptr)
     }
 }
 
-int* getAutomaticCol()
-{
-    int numsPool[15]; //Will contain all the possible number options
-    int* col = (int*)malloc(sizeof(int) * 6); //Will contain the selected col
-    int i;
-    int randomCell; //Will be used to select a random cell from numPools
-
-    for (i = 0; i < 15; i++)
-        numsPool[i] = i + 1;
-
-    for (i = 0; i < 6; )
-    {
-        srand(time(NULL));
-        randomCell = rand() % 15;
-
-        if (numsPool[randomCell] != 0)          //Verify that the random number wasn't selected before
-        { 
-            col[i++] = numsPool[randomCell];
-            numsPool[randomCell] = 0;
-        }
-    }
-    return col;
-}
 
 void getListFromUser(colList* lstC, int* numOfCols)
 {
@@ -408,19 +156,4 @@ void getListFromUser(colList* lstC, int* numOfCols)
         insertDataToEndList(lstC, &currCol);
     }
     //ToDo: Or will add creation of list
-}
-
-bool isDifferent(Col arr, int val, int index)
-{
-    int i;
-    bool isdiff = true;
-
-    for (i = 0; i < index && isdiff; i++)
-    {
-        if (arr[i] == val)
-        {
-            isdiff = false;
-        }
-    }
-    return isdiff;
 }
