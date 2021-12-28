@@ -79,11 +79,12 @@ void getParticipants()
 char* getName()
 {
     int logSize = 0;
-    int phsSize = 2;
+    int phsSize = INIT_SIZE;
     char c;
 
     char* name = (char*)ourMalloc(sizeof(char) * phsSize);
     printf("Please enter participant name:\n");
+    c = getchar();
     c = getchar();
     while(c!='\n')
     {
@@ -93,7 +94,9 @@ char* getName()
             name = (char*)ourRealloc(name, sizeof(char) * phsSize);
         }
         name[logSize++] = c;
+        c = getchar();
     }
+    name[logSize++] = '\0';
     if (logSize != phsSize)
         name = (char*)ourRealloc(name, sizeof(char) * logSize);
 
