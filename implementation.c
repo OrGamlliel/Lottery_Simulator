@@ -67,12 +67,12 @@ void getParticipants()
     
     for (i = 0; i < numOfParticipants; i++)
     {
-        name = getName(); //ToDo: fix
+        name = getName();
         makeEmptyColList(&colLst);
         currData = createDataForParticipant(name, colLst);
         insertPDataToEndPList(pLst, currData);
         lotteryMode = getLotteryMode();
-        getCols(&colLst, getLotteryMode());
+        getCols(&colLst, lotteryMode);
     }
 }
 
