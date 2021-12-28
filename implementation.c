@@ -51,7 +51,7 @@ void firstOption()
 
 void getParticipants()
 {
-    pList* pLst = (pList*)malloc(sizeof(pList));
+    pList* pLst = (pList*)ourMalloc(sizeof(pList));
     makeEmptyPList(pLst); //make empty participants list
 
     Data* currData;
@@ -82,7 +82,7 @@ char* getName()
     int phsSize = 2;
     char c;
 
-    char* name = (char*)malloc(sizeof(char) * phsSize);
+    char* name = (char*)ourMalloc(sizeof(char) * phsSize);
     printf("Please enter participant name:\n");
     c = getchar();
     while(c!='\n')
@@ -90,12 +90,12 @@ char* getName()
         if (logSize >= phsSize-1)
         {
             phsSize *= 2;
-            name = (char*)realloc(name, sizeof(char) * phsSize);
+            name = (char*)ourRealloc(name, sizeof(char) * phsSize);
         }
         name[logSize++] = c;
     }
     if (logSize != phsSize)
-        name = (char*)realloc(name, sizeof(char) * logSize);
+        name = (char*)ourRealloc(name, sizeof(char) * logSize);
 
     return name;
 }
@@ -141,7 +141,7 @@ void checkMemoryAllocation(void* ptr)
 void getListFromUser(colList* lstC, int* numOfCols)
 {
     int currChosenNum;
-    Col currCol;
+    Col currCol = (Col)ourMalloc(sizeof(int) * MAX_NUM_IN_COLS);
 
     for (int i = 0; i < numOfCols; i++)
     {
