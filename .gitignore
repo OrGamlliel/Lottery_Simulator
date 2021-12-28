@@ -9,3 +9,11 @@
 *.idb
 *.pdb
 *.tlog
+x64/Debug/implementation.obj
+x64/Debug/implementation.obj.enc
+x64/Debug/participants.obj
+x64/Debug/finalProjectC.vcxproj.FileListAbsolute.txt
+x64/Debug/utils.obj
+x64/Debug/finalProjectC.ilk
+x64/Debug/finalProjectC.exe
+x64/Debug/ColList.obj
