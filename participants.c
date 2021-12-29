@@ -14,9 +14,7 @@ bool isEmptyPList(pList pList)
 Data* createDataForParticipant(char* name, colList cols)
 {
     Data* result;
-
-    result = (Data*)malloc(sizeof(Data));
-    checkMemoryAllocation(result);
+    result = (Data*)ourMalloc(sizeof(Data));
 
     result->name = name;
     result->cols = cols;
@@ -30,8 +28,7 @@ Participant* createNewParticipant(Data* participantData, Participant* next)
 {
     Participant* result;
 
-    result = (Participant*)malloc(sizeof(Participant));
-    checkMemoryAllocation(result);
+    result = (Participant*)ourMalloc(sizeof(Participant));
 
     result->data = participantData;
     result->next = next;

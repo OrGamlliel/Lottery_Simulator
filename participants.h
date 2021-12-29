@@ -2,6 +2,7 @@
 #define participants_h
 
 #include "colList.h"
+#include "utils.h"
 
 typedef struct data
 {
