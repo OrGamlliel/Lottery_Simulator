@@ -99,11 +99,11 @@ Col* getAutomaticCol()
 
         if (numsPool[randomCell] != 0)          //Verify that the random number wasn't selected before
         {
-            col[i++] = numsPool[randomCell];
+            autoCol[i++] = numsPool[randomCell];
             numsPool[randomCell] = 0;
         }
     }
-    return col;
+    return &autoCol;
 }
 
 bool isDifferent(Col arr, int val, int index)
