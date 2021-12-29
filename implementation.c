@@ -16,8 +16,6 @@ void freeList(colList colList);
 void checkMemoryAllocation(void* ptr);
 void firstOption();
 void getListFromUser(colList* lstC, int* numOfCols);
-void printCol(Col col);
-void printColListNode(colListNode* colNode);
 
 
 void main() 
@@ -142,6 +140,7 @@ int getCols(colList* colLst, int lotteryMode)
     default:
         break;
     }
+    return N;
 }
 
 
@@ -179,5 +178,4 @@ void getListFromUser(colList* lstC, int* numOfCols)
         }
         insertDataToEndList(lstC, &currCol);
     }
-    //ToDo: Or will add creation of list
 }
