@@ -16,7 +16,7 @@ typedef struct participant
     struct participant* next;//ptr to the next participant
 } Participant;
 
-typedef struct pList {
+typedef struct plst {
     Participant* head;
     Participant* tail;
 } pList;

@@ -10,12 +10,14 @@
 
 void getParticipants();
 int getLotteryMode();
-void getCols(colList* colLst, int lotteryMode);
+int getCols(colList* colLst, int lotteryMode);
 char* getName();
 void freeList(colList colList);
 void checkMemoryAllocation(void* ptr);
 void firstOption();
 void getListFromUser(colList* lstC, int* numOfCols);
+void printCol(Col col);
+void printColListNode(colListNode* colNode);
 
 
 void main() 
@@ -37,6 +39,7 @@ void main()
 
         break;
     case 3:
+        exit(0);
         break;
     default:
         break;
@@ -59,20 +62,25 @@ void getParticipants()
     colList colLst;
     int numOfParticipants;
     int lotteryMode;
-    int i;
+    int i, pIndex;
     char* name;
 
     printf("Please enter the number of participants\n");
     scanf("%d", &numOfParticipants);
-    
-    for (i = 0; i < numOfParticipants; i++)
+
+    int* numOfCols = (int*)ourMalloc(sizeof(int) * numOfParticipants);
+
+    for (i = 0, pIndex = 0; i < numOfParticipants; i++, pIndex ++)
     {
         name = getName();
         makeEmptyColList(&colLst);
         currData = createDataForParticipant(name, colLst);
         insertPDataToEndPList(pLst, currData);
         lotteryMode = getLotteryMode();
-        getCols(&colLst, lotteryMode);
+        numOfCols[pIndex] = getCols(&pLst->tail->data->cols, lotteryMode);
+        printf("\n\n");
+
+        printColListNode(pLst->head);
     }
 }
 
@@ -111,7 +119,8 @@ int getLotteryMode()
     scanf("%d", &lotteryMode);
     return lotteryMode;
 }
-void getCols(colList* colLst, int lotteryMode)
+
+int getCols(colList* colLst, int lotteryMode)
 {
     int N; //desired num of columns
     printf("Please enter desired number of columns\n");
@@ -119,7 +128,7 @@ void getCols(colList* colLst, int lotteryMode)
     switch (lotteryMode)
     {
     case MANUAL:
-
+        getListFromUser(colLst, &N);
         break;
     case AUTO:
         for (int col = 0; col < N; col++)
@@ -153,12 +162,19 @@ void getListFromUser(colList* lstC, int* numOfCols)
 
     for (int i = 0; i < *numOfCols; i++)
     {
-        for (int j = 0; j < MAX_NUM_IN_COLS; j++)//fill one col
+        printf("Please enter 6 values:\n");
+
+        for (int j = 0; j < MAX_NUM_IN_COLS;)//fill one col
         {
             scanf("%d", &currChosenNum);
-            if (isDifferent(currCol, currChosenNum, j))
+            if (isDifferent(currCol, currChosenNum, j) && currChosenNum > 0 && currChosenNum < 16)
             {
                 currCol[j] = currChosenNum;
+                j++;
+            }
+            else
+            {
+                printf("Sorry your last value is invalid, please enter another value");
             }
         }
         insertDataToEndList(lstC, &currCol);

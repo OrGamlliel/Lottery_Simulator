@@ -1,4 +1,5 @@
 #include "participants.h"
+#include "utils.h"
 
 void makeEmptyPList(pList* plst)
 {
@@ -14,6 +15,7 @@ bool isEmptyPList(pList pList)
 Data* createDataForParticipant(char* name, colList cols)
 {
     Data* result;
+
     result = (Data*)ourMalloc(sizeof(Data));
 
     result->name = name;
@@ -21,8 +23,6 @@ Data* createDataForParticipant(char* name, colList cols)
 
     return result;
 }
-
-
 
 Participant* createNewParticipant(Data* participantData, Participant* next)
 {
