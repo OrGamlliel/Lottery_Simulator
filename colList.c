@@ -15,8 +15,7 @@ colListNode* createNode(Col* data, colListNode* next)
 {
     colListNode* result;
 
-    result = (colListNode*)malloc(sizeof(colListNode));
-    checkMemoryAllocation(result);
+    result = (colListNode*)ourMalloc(sizeof(colListNode));
 
     result->col = data;
     result->next = next;
@@ -48,7 +47,7 @@ void insertNodeToEndList(colList* colList, colListNode* newTail)
     }
 }
 
-void insertDataToEndList(colList* colList, int* col)
+void insertDataToEndList(colList* colList, Col* col)
 {
     colListNode* newTail;
     newTail = createNode(col, NULL);
@@ -83,10 +82,10 @@ void freeList(colList colList)
 }
 
 
-int* getAutomaticCol()
+Col* getAutomaticCol()
 {
     int numsPool[15]; //Will contain all the possible number options
-    int* col = (int*)malloc(sizeof(int) * 6); //Will contain the selected col
+    Col autoCol = (Col)ourMalloc(sizeof(int) * MAX_NUM_IN_COLS); //Will contain the selected col
     int i;
     int randomCell; //Will be used to select a random cell from numPools
 
