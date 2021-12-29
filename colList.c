@@ -120,3 +120,25 @@ bool isDifferent(Col arr, int val, int index)
     }
     return isdiff;
 }
+
+void printCol(Col col)
+{
+    for (int i = 0; i < 6; i++)
+    {
+        if (i == 0)
+            printf("[");
+        printf("%d", col[i]);
+        if (i < 5)
+            printf(",");
+        else if (i == 5)
+            printf("]");
+    }
+    printf("\n");
+}
+
+void printColNode(colListNode* colNode)
+{
+    printf("Column = ");
+    printCol(colNode->col);
+    printf("\n");
+}
