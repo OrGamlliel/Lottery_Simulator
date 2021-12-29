@@ -123,7 +123,12 @@ void getCols(colList* colLst, int lotteryMode)
         break;
     case AUTO:
         for (int col = 0; col < N; col++)
-            insertDataToEndList(colLst, getAutomaticCol());
+        {
+            Col* autoCol = getAutomaticCol();
+            printCol(*autoCol);
+            insertDataToEndList(colLst, autoCol);
+            printColNode(colLst->tail);
+        }
         break;
     default:
         break;
@@ -146,7 +151,7 @@ void getListFromUser(colList* lstC, int* numOfCols)
     int currChosenNum;
     Col currCol = (Col)ourMalloc(sizeof(int) * MAX_NUM_IN_COLS);
 
-    for (int i = 0; i < numOfCols; i++)
+    for (int i = 0; i < *numOfCols; i++)
     {
         for (int j = 0; j < MAX_NUM_IN_COLS; j++)//fill one col
         {
