@@ -1,2 +1,0 @@
-C:\Users\USER\source\repos\finalProjectC\Debug\finalProjectC.exe
-C:\Users\USER\source\repos\finalProjectC\Debug\finalProjectC.pdb

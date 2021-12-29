@@ -17,3 +17,6 @@ x64/Debug/utils.obj
 x64/Debug/finalProjectC.ilk
 x64/Debug/finalProjectC.exe
 x64/Debug/ColList.obj
+*.rej
+*.obj
+Debug/finalProjectC.vcxproj.FileListAbsolute.txt
