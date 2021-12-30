@@ -12,12 +12,12 @@
 #define UNKNOWN "unknown"
 
 #if defined _WIN32
-    #define PLATFORM WIN
+#define PLATFORM WIN
 #else
-    #define PLATFORM UNKNOWN
+#define PLATFORM UNKNOWN
 #endif
 
-pList* getParticipants();
+int* getParticipants(pList*);
 int getLotteryMode();
 int getCols(colList* colLst, int lotteryMode);
 char* getName();
@@ -30,7 +30,7 @@ void lookupForHits(pList* participants, int* lotteryResult);
 void checkHitsForParticipant(Participant* p, int* lotteryResult);
 void sortColsByHits(pList* participants);
 
-void main() 
+void main()
 {
     int userChoice;
     printf("Please choose one of the following option:\n");
@@ -41,7 +41,7 @@ void main()
 
     if (PLATFORM == "windows")
         system("cls");
- 
+
     switch (userChoice)
     {
     case 1:
@@ -61,36 +61,73 @@ void main()
 
 void firstOption()
 {
-    pList* participants = getParticipants();
+    pList* participants;
+    int* colsPerParticipant = getParticipants(participants);
     int* lotteryResult = getLotteryResult();
     lookupForHits(participants, lotteryResult);
     sortColsByHits(participants);
     printPList(*participants);
-
+    //Or needs to add Summary for cols with 6 hits, cols with 5 hits, etc...
+    printMostSuccessfulParticipant(participants, colsPerParticipant);
 }
+
+void printMostSuccessfulParticipant(pList* participants, int* colsPerParticipant)
+{
+    Participant* p = participants->head;
+    int pIndex = 0;
+
+    while (p != NULL)
+    {
+        colNode* c = p->data->cols.head;
+        int hitsSum = 0;
+        int colsCount = 0;
+        float hitsAvg = 0;
+        char* bestName = "No one";
+        float bestHitsAvg = 0;
+
+        while (c != NULL)
+        {
+            hitsSum += c->hits;
+            colsCount++;
+            c = c->next;
+        }
+        hitsAvg = (float)hitsSum / (float)colsCount;
+        if (hitsAvg > bestHitsAvg)
+        {
+            bestHitsAvg = hitsAvg;
+            bestName = p->data->name;
+        }
+        p = p->next;
+    }
+    
+}
+
 
 void sortColsByHits(pList* participants)
 {
-  /*  Participant* p = participants->head;
+    Participant* p = participants->head;
     while (p != NULL)
     {
-        colNode* colP = p->data->cols.head;
-
-        while (colP != NULL)
+        for (int hits = 6; hits >= 0; hits--)
         {
-            for (int hits = 6; hits >= 0; hits--)
+            colNode* colP = p->data->cols.head;
+
+            while (colP != NULL)
             {
                 if (colP->hits == hits && colP->next != NULL)
                 {
                     p->data->cols.head = colP->next;
+                    p->data->cols.tail->next = colP;
                     p->data->cols.tail = colP;
                     colP->next = NULL;
+                    colP = p->data->cols.head;
                 }
-                colP = colP->next;
+                else
+                    colP = colP->next;
             }
         }
         p = p->next;
-    }*/
+    }
 }
 
 void lookupForHits(pList* participants, int* lotteryResult)
@@ -133,9 +170,9 @@ int* getLotteryResult()
     return result;
 }
 
-pList* getParticipants()
+int* getParticipants(pList* pLst)
 {
-    pList* pLst = (pList*)ourMalloc(sizeof(pList));
+    pLst = (pList*)ourMalloc(sizeof(pList));
     makeEmptyPList(pLst); //make empty participants list
 
     Data* currData;
@@ -162,7 +199,7 @@ pList* getParticipants()
         printf("\n\n");
     }
     
-    return pLst;
+    return numOfCols;
 }
 
 char* getName()
