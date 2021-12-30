@@ -147,14 +147,14 @@ void checkHitsForParticipant(Participant* p, int* lotteryResult)
 
     while (currCol != NULL)
     {
-        for (int i = 0; i < MAX_NUM_IN_COLS; i++)
+        for (int i = 0; i < MAX_NUM_IN_COLS; i++) //i for numbers in one col
         {
-            for (int j = 0; j < MAX_NUM_IN_COLS; j++)
+            for (int j = 0; j < MAX_NUM_IN_COLS; j++)// j for numbers in lottery result
             {
                 if (currCol->col[i] == lotteryResult[j])
                     currCol->hits++;
             }
-        }
+        }//function to find num in array
         currCol = currCol->next;
     }
 }
