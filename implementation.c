@@ -17,7 +17,7 @@
 #define PLATFORM UNKNOWN
 #endif
 
-int* getParticipants(pList*);
+pList* getParticipants();
 int getLotteryMode();
 int getCols(colList* colLst, int lotteryMode);
 char* getName();
@@ -29,6 +29,7 @@ int* getLotteryResult();
 void lookupForHits(pList* participants, int* lotteryResult);
 void checkHitsForParticipant(Participant* p, int* lotteryResult);
 void sortColsByHits(pList* participants);
+void printMostSuccessfulParticipant(pList* participants);
 
 void main()
 {
@@ -61,20 +62,21 @@ void main()
 
 void firstOption()
 {
-    pList* participants;
-    int* colsPerParticipant = getParticipants(participants);
+    pList* participants = getParticipants();
     int* lotteryResult = getLotteryResult();
     lookupForHits(participants, lotteryResult);
     sortColsByHits(participants);
     printPList(*participants);
     //Or needs to add Summary for cols with 6 hits, cols with 5 hits, etc...
-    printMostSuccessfulParticipant(participants, colsPerParticipant);
+    printMostSuccessfulParticipant(participants);
 }
 
-void printMostSuccessfulParticipant(pList* participants, int* colsPerParticipant)
+void printMostSuccessfulParticipant(pList* participants)
 {
     Participant* p = participants->head;
     int pIndex = 0;
+    char* bestName = "No one";
+    float bestHitsAvg = 0;
 
     while (p != NULL)
     {
@@ -82,8 +84,6 @@ void printMostSuccessfulParticipant(pList* participants, int* colsPerParticipant
         int hitsSum = 0;
         int colsCount = 0;
         float hitsAvg = 0;
-        char* bestName = "No one";
-        float bestHitsAvg = 0;
 
         while (c != NULL)
         {
@@ -99,7 +99,7 @@ void printMostSuccessfulParticipant(pList* participants, int* colsPerParticipant
         }
         p = p->next;
     }
-    
+    printf("The participant with the best hit average is: %s, with %f hits", bestName, bestHitsAvg);
 }
 
 
@@ -170,9 +170,9 @@ int* getLotteryResult()
     return result;
 }
 
-int* getParticipants(pList* pLst)
+pList* getParticipants()
 {
-    pLst = (pList*)ourMalloc(sizeof(pList));
+    pList* pLst = (pList*)ourMalloc(sizeof(pList));
     makeEmptyPList(pLst); //make empty participants list
 
     Data* currData;
@@ -199,7 +199,7 @@ int* getParticipants(pList* pLst)
         printf("\n\n");
     }
     
-    return numOfCols;
+    return pLst;
 }
 
 char* getName()
