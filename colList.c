@@ -54,15 +54,6 @@ void insertDataToEndList(colList* colList, int* col)
     insertNodeToEndList(colList, newTail);
 }
 
-void printList(colList colList)
-{
-    colListNode* p;
-
-    for (p = colList.head; p != NULL; p = p->next)
-        //printf ("%d\n",p->data); toDo
-        printf("\n");
-}
-
 void freeList(colList colList)
 {
     colNode* p, * q;
