@@ -1,5 +1,6 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
+#include <stdlib.h>
 #include <time.h>
 #include "colList.h"
 #include "participants.h"
@@ -7,6 +8,14 @@
 
 #define MANUAL 1
 #define AUTO 2
+#define WIN "windows"
+#define UNKNOWN "unknown"
+
+#if defined _WIN32
+    #define PLATFORM WIN
+#else
+    #define PLATFORM UNKNOWN
+#endif
 
 pList* getParticipants();
 int getLotteryMode();
@@ -19,18 +28,20 @@ void getListFromUser(colList* lstC, int numOfCols);
 int* getLotteryResult();
 void lookupForHits(pList* participants, int* lotteryResult);
 void checkHitsForParticipant(Participant* p, int* lotteryResult);
-
+void sortColsByHits(pList* participants);
 
 void main() 
 {
     int userChoice;
-
     printf("Please choose one of the following option:\n");
     printf("1. Enter number of participants\n");
     printf("2. View latest lottery results\n");
     printf("3. Exit\n");
     scanf("%d", &userChoice);
 
+    if (PLATFORM == "windows")
+        system("cls");
+ 
     switch (userChoice)
     {
     case 1:
@@ -53,8 +64,35 @@ void firstOption()
     pList* participants = getParticipants();
     int* lotteryResult = getLotteryResult();
     lookupForHits(participants, lotteryResult);
+    sortColsByHits(participants);
+    printPList(*participants);
 
 }
+
+void sortColsByHits(pList* participants)
+{
+  /*  Participant* p = participants->head;
+    while (p != NULL)
+    {
+        colNode* colP = p->data->cols.head;
+
+        while (colP != NULL)
+        {
+            for (int hits = 6; hits >= 0; hits--)
+            {
+                if (colP->hits == hits && colP->next != NULL)
+                {
+                    p->data->cols.head = colP->next;
+                    p->data->cols.tail = colP;
+                    colP->next = NULL;
+                }
+                colP = colP->next;
+            }
+        }
+        p = p->next;
+    }*/
+}
+
 void lookupForHits(pList* participants, int* lotteryResult)
 {
     Participant* p = participants->head;
@@ -64,7 +102,6 @@ void lookupForHits(pList* participants, int* lotteryResult)
         checkHitsForParticipant(p, lotteryResult);
         p = p->next;
     }
-
 }
 
 void checkHitsForParticipant(Participant* p, int* lotteryResult)
@@ -91,6 +128,7 @@ int* getLotteryResult()
 
     printf("The winning column is:\t");
     printCol(result);
+    printf("\n");
 
     return result;
 }
@@ -123,7 +161,6 @@ pList* getParticipants()
         numOfCols[pIndex] = getCols(&pLst->tail->data->cols, lotteryMode); //OrG needs to continue
         printf("\n\n");
     }
-    printPList(*pLst);
     
     return pLst;
 }
