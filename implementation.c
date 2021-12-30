@@ -78,7 +78,7 @@ void getParticipants()
         numOfCols[pIndex] = getCols(&pLst->tail->data->cols, lotteryMode);
         printf("\n\n");
 
-        printColListNode(pLst->head);
+        printColNode(pLst->head);
     }
 }
 
@@ -131,8 +131,8 @@ int getCols(colList* colLst, int lotteryMode)
     case AUTO:
         for (int col = 0; col < N; col++)
         {
-            Col* autoCol = getAutomaticCol();
-            printCol(*autoCol);
+            int* autoCol = getAutomaticCol();
+            printCol(autoCol);
             insertDataToEndList(colLst, autoCol);
             printColNode(colLst->tail);
         }
@@ -157,7 +157,7 @@ void checkMemoryAllocation(void* ptr)
 void getListFromUser(colList* lstC, int* numOfCols)
 {
     int currChosenNum;
-    Col currCol = (Col)ourMalloc(sizeof(int) * MAX_NUM_IN_COLS);
+    int* currCol = (int*)ourMalloc(sizeof(int) * MAX_NUM_IN_COLS);
 
     for (int i = 0; i < *numOfCols; i++)
     {

@@ -8,23 +8,21 @@
 
 #define MAX_NUM_IN_COLS 6
 
-typedef int* Col;
-
-typedef struct collistNode {
-    Col* col;             //col is a ptr to array
+typedef struct colNode {
+    int* col;             //col is an array of ints
     struct colListNode* next;//ptr to the next col
-} colListNode;
+} colNode;
 
 typedef struct colList {
-    colListNode* head;
-    colListNode* tail;
+    colNode* head;
+    colNode* tail;
 } colList;
 
 void makeEmptyColList(colList* colst);
-void insertDataToEndList(colList* colList, Col* col);
-Col* getAutomaticCol();
-bool isDifferent(Col arr, int val, int index);
-void printCol(Col col);
-void printColNode(colListNode*);
+void insertDataToEndList(colList* colList, int* col);
+int* getAutomaticCol();
+bool isDifferent(int* arr, int val, int index);
+void printCol(int* col);
+void printColNode(colNode*);
 
 #endif // colList_h
