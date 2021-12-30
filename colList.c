@@ -129,12 +129,12 @@ void printCol(int* col)
         else if (i == 5)
             printf("]");
     }
-    printf("\n");
 }
 
 void printColNode(colNode* colNode)
 {
     printf("Column = ");
     printCol(colNode->col);
+    printf("\t- Hits: %d", colNode->hits);
     printf("\n");
 }
