@@ -1,6 +1,5 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
-#include <stdlib.h>
 #include <time.h>
 #include "colList.h"
 #include "participants.h"
@@ -8,16 +7,8 @@
 
 #define MANUAL 1
 #define AUTO 2
-#define WIN "windows"
-#define UNKNOWN "unknown"
 
-#if defined _WIN32
-#define PLATFORM WIN
-#else
-#define PLATFORM UNKNOWN
-#endif
-
-int* getParticipants(pList*);
+pList* getParticipants();
 int getLotteryMode();
 int getCols(colList* colLst, int lotteryMode);
 char* getName();
@@ -28,19 +19,17 @@ void getListFromUser(colList* lstC, int numOfCols);
 int* getLotteryResult();
 void lookupForHits(pList* participants, int* lotteryResult);
 void checkHitsForParticipant(Participant* p, int* lotteryResult);
-void sortColsByHits(pList* participants);
 
-void main()
+
+void main() 
 {
     int userChoice;
+
     printf("Please choose one of the following option:\n");
     printf("1. Enter number of participants\n");
     printf("2. View latest lottery results\n");
     printf("3. Exit\n");
     scanf("%d", &userChoice);
-
-    if (PLATFORM == "windows")
-        system("cls");
 
     switch (userChoice)
     {
@@ -61,75 +50,11 @@ void main()
 
 void firstOption()
 {
-    pList* participants;
-    int* colsPerParticipant = getParticipants(participants);
+    pList* participants = getParticipants();
     int* lotteryResult = getLotteryResult();
     lookupForHits(participants, lotteryResult);
-    sortColsByHits(participants);
-    printPList(*participants);
-    //Or needs to add Summary for cols with 6 hits, cols with 5 hits, etc...
-    printMostSuccessfulParticipant(participants, colsPerParticipant);
+
 }
-
-void printMostSuccessfulParticipant(pList* participants, int* colsPerParticipant)
-{
-    Participant* p = participants->head;
-    int pIndex = 0;
-
-    while (p != NULL)
-    {
-        colNode* c = p->data->cols.head;
-        int hitsSum = 0;
-        int colsCount = 0;
-        float hitsAvg = 0;
-        char* bestName = "No one";
-        float bestHitsAvg = 0;
-
-        while (c != NULL)
-        {
-            hitsSum += c->hits;
-            colsCount++;
-            c = c->next;
-        }
-        hitsAvg = (float)hitsSum / (float)colsCount;
-        if (hitsAvg > bestHitsAvg)
-        {
-            bestHitsAvg = hitsAvg;
-            bestName = p->data->name;
-        }
-        p = p->next;
-    }
-    
-}
-
-
-void sortColsByHits(pList* participants)
-{
-    Participant* p = participants->head;
-    while (p != NULL)
-    {
-        for (int hits = 6; hits >= 0; hits--)
-        {
-            colNode* colP = p->data->cols.head;
-
-            while (colP != NULL)
-            {
-                if (colP->hits == hits && colP->next != NULL)
-                {
-                    p->data->cols.head = colP->next;
-                    p->data->cols.tail->next = colP;
-                    p->data->cols.tail = colP;
-                    colP->next = NULL;
-                    colP = p->data->cols.head;
-                }
-                else
-                    colP = colP->next;
-            }
-        }
-        p = p->next;
-    }
-}
-
 void lookupForHits(pList* participants, int* lotteryResult)
 {
     Participant* p = participants->head;
@@ -139,6 +64,7 @@ void lookupForHits(pList* participants, int* lotteryResult)
         checkHitsForParticipant(p, lotteryResult);
         p = p->next;
     }
+
 }
 
 void checkHitsForParticipant(Participant* p, int* lotteryResult)
@@ -165,14 +91,13 @@ int* getLotteryResult()
 
     printf("The winning column is:\t");
     printCol(result);
-    printf("\n");
 
     return result;
 }
 
-int* getParticipants(pList* pLst)
+pList* getParticipants()
 {
-    pLst = (pList*)ourMalloc(sizeof(pList));
+    pList* pLst = (pList*)ourMalloc(sizeof(pList));
     makeEmptyPList(pLst); //make empty participants list
 
     Data* currData;
@@ -198,8 +123,9 @@ int* getParticipants(pList* pLst)
         numOfCols[pIndex] = getCols(&pLst->tail->data->cols, lotteryMode); //OrG needs to continue
         printf("\n\n");
     }
+    printPList(*pLst);
     
-    return numOfCols;
+    return pLst;
 }
 
 char* getName()

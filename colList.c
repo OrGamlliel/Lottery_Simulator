@@ -11,11 +11,11 @@ bool isEmptyList(colList colList)
     return (colList.head == NULL);
 }
 
-colListNode* createNode(Col* data, colListNode* next)
+colNode* createNode(int* data, colNode* next)
 {
-    colListNode* result;
+    colNode* result;
 
-    result = (colListNode*)ourMalloc(sizeof(colListNode));
+    result = (colNode*)ourMalloc(sizeof(colNode));
 
     result->col = data;
     result->next = next;
@@ -24,7 +24,7 @@ colListNode* createNode(Col* data, colListNode* next)
 }
 
 
-void insertNodeToHead(colList* colList, colListNode* newHead)
+void insertNodeToHead(colList* colList, colNode* newHead)
 {
     newHead->next = colList->head;
     if (colList->tail == NULL)
@@ -34,7 +34,7 @@ void insertNodeToHead(colList* colList, colListNode* newHead)
     colList->head = newHead;
 }
 
-void insertNodeToEndList(colList* colList, colListNode* newTail)
+void insertNodeToEndList(colList* colList, colNode* newTail)
 {
     newTail->next = NULL;
 
@@ -47,25 +47,16 @@ void insertNodeToEndList(colList* colList, colListNode* newTail)
     }
 }
 
-void insertDataToEndList(colList* colList, Col* col)
+void insertDataToEndList(colList* colList, int* col)
 {
-    colListNode* newTail;
+    colNode* newTail;
     newTail = createNode(col, NULL);
     insertNodeToEndList(colList, newTail);
 }
 
-void printList(colList colList)
-{
-    colListNode* p;
-
-    for (p = colList.head; p != NULL; p = p->next)
-        //printf ("%d\n",p->data); toDo
-        printf("\n");
-}
-
 void freeList(colList colList)
 {
-    colListNode* p, * q;
+    colNode* p, * q;
 
     if (isEmptyList(colList))
         return;
@@ -82,10 +73,10 @@ void freeList(colList colList)
 }
 
 
-Col* getAutomaticCol()
+int* getAutomaticCol()
 {
     int numsPool[15]; //Will contain all the possible number options
-    Col autoCol = (Col)ourMalloc(sizeof(int) * MAX_NUM_IN_COLS); //Will contain the selected col
+    int* autoCol = (int*)ourMalloc(sizeof(int) * MAX_NUM_IN_COLS); //Will contain the selected col
     int i;
     int randomCell; //Will be used to select a random cell from numPools
 
@@ -103,10 +94,10 @@ Col* getAutomaticCol()
             numsPool[randomCell] = 0;
         }
     }
-    return &autoCol;
+    return autoCol;
 }
 
-bool isDifferent(Col arr, int val, int index)
+bool isDifferent(int* arr, int val, int index)
 {
     int i;
     bool isdiff = true;
@@ -121,7 +112,12 @@ bool isDifferent(Col arr, int val, int index)
     return isdiff;
 }
 
-void printCol(Col col)
+bool isWithinRange(int number)
+{
+    return (number > 0 && number < 15) ? true : false;
+}
+
+void printCol(int* col)
 {
     for (int i = 0; i < 6; i++)
     {
@@ -133,12 +129,12 @@ void printCol(Col col)
         else if (i == 5)
             printf("]");
     }
-    printf("\n");
 }
 
-void printColNode(colListNode* colNode)
+void printColNode(colNode* colNode)
 {
     printf("Column = ");
     printCol(colNode->col);
+    printf("\t- Hits: %d", colNode->hits);
     printf("\n");
 }
