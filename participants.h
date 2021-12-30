@@ -3,6 +3,7 @@
 
 #include "colList.h"
 #include "utils.h"
+#include <stdlib.h>
 
 typedef struct data
 {
@@ -30,5 +31,6 @@ void insertPNodeToEndList(pList* pList, Participant* newTail);
 void insertDataToStartPList(pList* pList, Data* participantData);
 void insertParticipantToHead(pList* pList, Participant* newHead);
 void printPList(pList pList);
+printPartipant(Participant* p);
 
 #endif // participants_h

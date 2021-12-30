@@ -77,8 +77,10 @@ void printPList(pList pList)
 {
     Participant* p;
 
+    printf("The list of participants is:\n");
+
     for (p = pList.head; p != NULL; p = p->next)
-        //printf ("%d\n",p->data); toDo
+        printPartipant(p);
         printf("\n");
 }
 
@@ -98,4 +100,17 @@ void freePList(pList pList)
         free(q);
     }
     free(p);
+}
+
+printPartipant(Participant* p)
+{
+    colNode* ptr = p->data->cols.head;
+    printf("%s:\n", p->data->name);
+    
+    while (ptr != NULL)
+    {
+        printColNode(ptr);
+        ptr = ptr->next;
+    }
+    printf("\n");
 }

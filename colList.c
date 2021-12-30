@@ -112,6 +112,11 @@ bool isDifferent(int* arr, int val, int index)
     return isdiff;
 }
 
+bool isWithinRange(int number)
+{
+    return (number > 0 && number < 15) ? true : false;
+}
+
 void printCol(int* col)
 {
     for (int i = 0; i < 6; i++)
