@@ -17,6 +17,7 @@
 #define PLATFORM UNKNOWN
 #endif
 
+void showMenu();
 pList* getParticipants();
 int getLotteryMode();
 int getCols(colList* colLst, int lotteryMode);
@@ -40,7 +41,11 @@ void printSumOfHits(int* arr);
 void main()
 {
     srand(time(NULL));
+    showMenu();
+}
 
+void showMenu()
+{
     int userChoice;
     printf("Please choose one of the following option:\n");
     printf("1. Enter number of participants\n");
