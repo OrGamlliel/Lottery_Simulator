@@ -26,8 +26,8 @@ void checkMemoryAllocation(void* ptr);
 void firstOption();
 void getListFromUser(colList* lstC, int numOfCols);
 int* getLotteryResult();
-void checkHitsForParticipant(Participant* p, int* lotteryResult);
 int** lookupForHits(pList* participants, int* lotteryResult);
+void checkHitsForParticipant(Participant* p, int* lotteryResult, int** arr);
 void sortColsByHits(pList* participants);
 void printMostSuccessfulParticipant(pList* participants);
 void sortColsByHits(pList* participants);
@@ -188,26 +188,32 @@ int** lookupForHits(pList* participants, int* lotteryResult)
     //check memory
     while (p != NULL)
     {
-        checkHitsForParticipant(p, lotteryResult);
+        checkHitsForParticipant(p, lotteryResult, &sumOfHits);
         p = p->next;
     }
     return &sumOfHits;
 }
 
-void checkHitsForParticipant(Participant* p, int* lotteryResult)
+void checkHitsForParticipant(Participant* p, int* lotteryResult, int** arr)
 {
     colNode* currCol = p->data->cols.head;
-
+    bool isFound = false;
+  
     while (currCol != NULL)
     {
         for (int i = 0; i < MAX_NUM_IN_COLS; i++) //i for numbers in one col
         {
-            for (int j = 0; j < MAX_NUM_IN_COLS; j++)// j for numbers in lottery result
+            for (int j = 0; j < MAX_NUM_IN_COLS && !isFound; j++)// j for numbers in lottery result
             {
                 if (currCol->col[i] == lotteryResult[j])
+                {
                     currCol->hits++;
+                    isFound = true;
+                }
             }
+            isFound = false;
         }//function to find num in array
+        (*arr)[currCol->hits]++;
         currCol = currCol->next;
     }
 }
