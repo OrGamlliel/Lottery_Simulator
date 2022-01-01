@@ -26,7 +26,7 @@ void checkMemoryAllocation(void* ptr);
 void firstOption();
 void getListFromUser(colList* lstC, int numOfCols);
 int* getLotteryResult();
-int** lookupForHits(pList* participants, int* lotteryResult);
+void lookupForHits(pList* participants, int* lotteryResult, int** sum);
 void checkHitsForParticipant(Participant* p, int* lotteryResult, int** arr);
 void sortColsByHits(pList* participants);
 void printMostSuccessfulParticipant(pList* participants);
@@ -34,6 +34,7 @@ void sortColsByHits(pList* participants);
 void MergeSort(colNode** headRef);
 colNode* SortedMerge(colNode* head1, colNode* head2);
 void middle(colNode* source, colNode** frontRef, colNode** backRef);
+void printSumOfHits(int* arr);
 
 void main()
 {
@@ -67,12 +68,15 @@ void main()
 void firstOption()
 {
     int** sumOfHits;
+    sumOfHits = (int**)ourMalloc(sizeof(int*));
     pList* participants = getParticipants();
     int* lotteryResult = getLotteryResult();
-    sumOfHits= lookupForHits(participants, lotteryResult);
+    lookupForHits(participants, lotteryResult, sumOfHits);
     //printCol(*sumOfHits); //prints only 6 instead of seven 
     sortColsByHits(participants);
     printPList(*participants);
+    printSumOfHits(*sumOfHits);
+
     //Or needs to add Summary for cols with 6 hits, cols with 5 hits, etc...
     printMostSuccessfulParticipant(participants);
 }
@@ -180,18 +184,16 @@ void middle(colNode* source, colNode** frontRef, colNode** backRef)
     slow->next = NULL;
 }
 
-int** lookupForHits(pList* participants, int* lotteryResult)
+void lookupForHits(pList* participants, int* lotteryResult, int** sum)
 {
     Participant* p = participants->head;
-    int* sumOfHits;
-    sumOfHits = (int*)calloc(sizeof(int), 7);
-    //check memory
+    *sum = (int*)calloc(sizeof(int), 7);
+   // check memory
     while (p != NULL)
     {
-        checkHitsForParticipant(p, lotteryResult, &sumOfHits);
+        checkHitsForParticipant(p, lotteryResult, sum);
         p = p->next;
     }
-    return &sumOfHits;
 }
 
 void checkHitsForParticipant(Participant* p, int* lotteryResult, int** arr)
@@ -356,4 +358,12 @@ void getListFromUser(colList* lstC, int numOfCols)
         insertDataToEndList(lstC, currCol);
         lstC->tail->hits = 0;
     }
+}
+void printSumOfHits(int* arr)
+{
+    for (int i = 0; i < 7; i++)
+    {
+        printf("The number of columns with %d hits is: %d\n", i, arr[i]);
+    }
+
 }
