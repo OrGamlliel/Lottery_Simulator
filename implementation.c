@@ -30,6 +30,10 @@ void checkHitsForParticipant(Participant* p, int* lotteryResult);
 int** lookupForHits(pList* participants, int* lotteryResult);
 void sortColsByHits(pList* participants);
 void printMostSuccessfulParticipant(pList* participants);
+void sortColsByHits(pList* participants);
+void MergeSort(colNode** headRef);
+colNode* SortedMerge(colNode* head1, colNode* head2);
+void middle(colNode* source, colNode** frontRef, colNode** backRef);
 
 void main()
 {
@@ -66,6 +70,7 @@ void firstOption()
     pList* participants = getParticipants();
     int* lotteryResult = getLotteryResult();
     sumOfHits= lookupForHits(participants, lotteryResult);
+    //printCol(*sumOfHits); //prints only 6 instead of seven 
     sortColsByHits(participants);
     printPList(*participants);
     //Or needs to add Summary for cols with 6 hits, cols with 5 hits, etc...
@@ -107,28 +112,72 @@ void printMostSuccessfulParticipant(pList* participants)
 void sortColsByHits(pList* participants)
 {
     Participant* p = participants->head;
+
     while (p != NULL)
     {
-        for (int hits = 6; hits >= 0; hits--)
-        {
-            colNode* colP = p->data->cols.head;
-
-            while (colP != NULL)
-            {
-                if (colP->hits == hits && colP->next != NULL)
-                {
-                    p->data->cols.head = colP->next;
-                    p->data->cols.tail->next = colP;
-                    p->data->cols.tail = colP;
-                    colP->next = NULL;
-                    colP = p->data->cols.head;
-                }
-                else
-                    colP = colP->next;
-            }
-        }
+        MergeSort(&(p->data->cols)); 
         p = p->next;
     }
+}
+/* sorts the linked list by changing links */
+void MergeSort(colNode** headRef) {
+    colNode* head = *headRef;
+    colNode* newHead1;
+    colNode* newHead2;
+
+    if ((head == NULL) || (head->next == NULL))
+    {
+        return;
+    }
+    middle(head, &newHead1, &newHead2);
+    MergeSort(&newHead1);
+    MergeSort(&newHead2);
+    *headRef = SortedMerge(newHead1, newHead2);
+}
+
+colNode* SortedMerge(colNode* head1, colNode* head2)
+{
+    colNode* res = NULL;
+    /* Base cases */
+    if (head1 == NULL)
+        return (head2);
+    else if (head2 == NULL)
+        return (head1);
+    if (head1->hits > head2->hits)
+    {
+        res = head1;
+        res->next = SortedMerge(head1->next, head2);
+    }
+    else
+    {
+        res = head2;
+        res->next = SortedMerge(head1, head2->next);
+    }
+    return (res);
+}
+
+//finds the middle node in the list
+void middle(colNode* source, colNode** frontRef, colNode** backRef)
+{
+    colNode* slow;
+    colNode* fast;
+    slow = source;
+    fast = source->next;
+
+    //every loop the fast index advances 2 nodes and the slow advanced 1 node
+    while (fast != NULL)
+    {
+        fast = fast->next;
+        if (fast != NULL)
+        {
+            slow = slow->next;
+            fast = fast->next;
+        }
+    }
+    //splits the list and define the head and tail in each
+    *frontRef = source;
+    *backRef = slow->next;
+    slow->next = NULL;
 }
 
 int** lookupForHits(pList* participants, int* lotteryResult)
