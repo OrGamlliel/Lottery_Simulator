@@ -21,6 +21,8 @@ typedef struct colList {
 
 void makeEmptyColList(colList* colst);
 void insertDataToEndList(colList* colList, int* col);
+colNode* createNode(int* data, int hits, colNode* next);
+void insertNodeToEndList(colList* colList, colNode* newTail);
 int* getAutomaticCol();
 bool isDifferent(int* arr, int val, int index);
 bool isWithinRange(int number);

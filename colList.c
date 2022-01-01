@@ -11,27 +11,17 @@ bool isEmptyList(colList colList)
     return (colList.head == NULL);
 }
 
-colNode* createNode(int* data, colNode* next)
+colNode* createNode(int* data, int hits, colNode* next)
 {
     colNode* result;
 
     result = (colNode*)ourMalloc(sizeof(colNode));
 
     result->col = data;
+    result->hits = hits;
     result->next = next;
 
     return result;
-}
-
-
-void insertNodeToHead(colList* colList, colNode* newHead)
-{
-    newHead->next = colList->head;
-    if (colList->tail == NULL)
-    {
-        colList->tail = newHead;
-    }
-    colList->head = newHead;
 }
 
 void insertNodeToEndList(colList* colList, colNode* newTail)
@@ -50,7 +40,7 @@ void insertNodeToEndList(colList* colList, colNode* newTail)
 void insertDataToEndList(colList* colList, int* col)
 {
     colNode* newTail;
-    newTail = createNode(col, NULL);
+    newTail = createNode(col, 0, NULL);
     insertNodeToEndList(colList, newTail);
 }
 
