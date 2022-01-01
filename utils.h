@@ -20,6 +20,7 @@ void validateFOpen(FILE*);
 void validateFClose(int);
 void* ourMalloc(int);
 void* ourRealloc(void*, int);
+void* ourCalloc(int, int);
 void validateMemAlloc(void*);
 void exitWithMessage(char*);
 void assertTrue(bool, char*);
