@@ -165,7 +165,7 @@ int* getLotteryResult()
 
     printf("The winning column is:\t");
     printCol(result);
-    printf("\n");
+    printf("\n\n");
 
     return result;
 }
@@ -292,7 +292,7 @@ void getListFromUser(colList* lstC, int numOfCols)
                 j++;
             }
             else
-                printf("Sorry your last value is invalid, please enter another value");
+                printf("Sorry your last value is invalid, please enter another value\n");
         }
         insertDataToEndList(lstC, currCol);
         lstC->tail->hits = 0;
