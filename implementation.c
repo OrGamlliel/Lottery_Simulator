@@ -38,6 +38,8 @@ void printSumOfHits(int* arr);
 
 void main()
 {
+    srand(time(NULL));
+
     int userChoice;
     printf("Please choose one of the following option:\n");
     printf("1. Enter number of participants\n");
@@ -72,12 +74,9 @@ void firstOption()
     pList* participants = getParticipants();
     int* lotteryResult = getLotteryResult();
     lookupForHits(participants, lotteryResult, sumOfHits);
-    //printCol(*sumOfHits); //prints only 6 instead of seven 
     sortColsByHits(participants);
-    printPList(*participants);
+    //printPList(*participants);
     printSumOfHits(*sumOfHits);
-
-    //Or needs to add Summary for cols with 6 hits, cols with 5 hits, etc...
     printMostSuccessfulParticipant(participants);
 }
 
@@ -365,5 +364,5 @@ void printSumOfHits(int* arr)
     {
         printf("The number of columns with %d hits is: %d\n", i, arr[i]);
     }
-
+    printf("\n\n");
 }

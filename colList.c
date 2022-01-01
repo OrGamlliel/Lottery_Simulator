@@ -36,7 +36,7 @@ void insertNodeToHead(colList* colList, colNode* newHead)
 
 void insertNodeToEndList(colList* colList, colNode* newTail)
 {
-    newTail->next = NULL;
+   // newTail->next = NULL;
 
     if (isEmptyList(*colList))
         colList->head = colList->tail = newTail;
@@ -75,27 +75,20 @@ void freeList(colList colList)
 
 int* getAutomaticCol()
 {
-    //int numsPool[15]; //Will contain all the possible number options
-    //int* autoCol = (int*)ourMalloc(sizeof(int) * MAX_NUM_IN_COLS); //Will contain the selected col
     int i;
-    int randomNum; //Will be used to select a random cell from numPools
-    srand(time(NULL));
-    int* winCol = (int*)ourMalloc(sizeof(int) * 6);
-    /*
-    for (i = 0; i < 15; i++)
-        numsPool[i] = i + 1*/;
+    int randomNum;
+    int* autoCol = (int*)ourMalloc(sizeof(int) * MAX_NUM_IN_COLS);
 
     for (i = 0; i < 6; )
     {
         randomNum = 1 + rand() % 15;
 
-        if (isDifferent(winCol, randomNum, i))          //Verify that the random number wasn't selected before
+        if (isDifferent(autoCol, randomNum, i)) 
         {
-            winCol[i++] = randomNum;
-           // numsPool[randomCell] = 0;
+            autoCol[i++] = randomNum;
         }
     }
-    return winCol;
+    return autoCol;
 }
 
 bool isDifferent(int* arr, int val, int index)
