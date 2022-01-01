@@ -11,7 +11,7 @@
 typedef struct colNode {
     int* col;             //col is an array of ints
     int hits;
-    struct colListNode* next;//ptr to the next col
+    struct colNode* next;//ptr to the next col
 } colNode;
 
 typedef struct colList {

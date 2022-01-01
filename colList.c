@@ -75,26 +75,27 @@ void freeList(colList colList)
 
 int* getAutomaticCol()
 {
-    int numsPool[15]; //Will contain all the possible number options
-    int* autoCol = (int*)ourMalloc(sizeof(int) * MAX_NUM_IN_COLS); //Will contain the selected col
+    //int numsPool[15]; //Will contain all the possible number options
+    //int* autoCol = (int*)ourMalloc(sizeof(int) * MAX_NUM_IN_COLS); //Will contain the selected col
     int i;
-    int randomCell; //Will be used to select a random cell from numPools
+    int randomNum; //Will be used to select a random cell from numPools
     srand(time(NULL));
-
+    int* winCol = (int*)ourMalloc(sizeof(int) * 6);
+    /*
     for (i = 0; i < 15; i++)
-        numsPool[i] = i + 1;
+        numsPool[i] = i + 1*/;
 
     for (i = 0; i < 6; )
     {
-        randomCell = rand() % 15;
+        randomNum = 1 + rand() % 15;
 
-        if (numsPool[randomCell] != 0)          //Verify that the random number wasn't selected before
+        if (isDifferent(winCol, randomNum, i))          //Verify that the random number wasn't selected before
         {
-            autoCol[i++] = numsPool[randomCell];
-            numsPool[randomCell] = 0;
+            winCol[i++] = randomNum;
+           // numsPool[randomCell] = 0;
         }
     }
-    return autoCol;
+    return winCol;
 }
 
 bool isDifferent(int* arr, int val, int index)
