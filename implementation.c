@@ -26,8 +26,8 @@ void checkMemoryAllocation(void* ptr);
 void firstOption();
 void getListFromUser(colList* lstC, int numOfCols);
 int* getLotteryResult();
-void lookupForHits(pList* participants, int* lotteryResult);
 void checkHitsForParticipant(Participant* p, int* lotteryResult);
+int** lookupForHits(pList* participants, int* lotteryResult);
 void sortColsByHits(pList* participants);
 void printMostSuccessfulParticipant(pList* participants);
 
@@ -62,9 +62,10 @@ void main()
 
 void firstOption()
 {
+    int** sumOfHits;
     pList* participants = getParticipants();
     int* lotteryResult = getLotteryResult();
-    lookupForHits(participants, lotteryResult);
+    sumOfHits= lookupForHits(participants, lotteryResult);
     sortColsByHits(participants);
     printPList(*participants);
     //Or needs to add Summary for cols with 6 hits, cols with 5 hits, etc...
@@ -130,15 +131,18 @@ void sortColsByHits(pList* participants)
     }
 }
 
-void lookupForHits(pList* participants, int* lotteryResult)
+int** lookupForHits(pList* participants, int* lotteryResult)
 {
     Participant* p = participants->head;
-
+    int* sumOfHits;
+    sumOfHits = (int*)calloc(sizeof(int), 7);
+    //check memory
     while (p != NULL)
     {
         checkHitsForParticipant(p, lotteryResult);
         p = p->next;
     }
+    return &sumOfHits;
 }
 
 void checkHitsForParticipant(Participant* p, int* lotteryResult)
