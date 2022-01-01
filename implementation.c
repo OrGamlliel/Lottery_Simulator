@@ -119,7 +119,7 @@ void sortColsByHits(pList* participants)
 
     while (p != NULL)
     {
-        MergeSort(&(p->data->cols)); 
+        MergeSort(&(p->data->cols.head)); 
         p = p->next;
     }
 }
