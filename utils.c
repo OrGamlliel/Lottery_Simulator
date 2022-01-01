@@ -38,6 +38,15 @@ void* ourMalloc(int size)
 	return res;
 }
 
+//The function allocates memory and validates memory allocation. In case of success it will return a pointer to the mallocated memory,
+//otherwise the program will exit.
+void* ourCalloc(int numOfElements, int size)
+{
+	void* res = calloc(numOfElements, size);
+	validateMemAlloc(res);
+	return res;
+}
+
 //The function reallocated memory and validates memory reallocation. In case of success it will return a pointer to the reallocated memory,
 //otherwise the program will exit.
 void* ourRealloc(void* block, int size)
