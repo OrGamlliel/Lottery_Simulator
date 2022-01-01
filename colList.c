@@ -114,7 +114,7 @@ bool isDifferent(int* arr, int val, int index)
 
 bool isWithinRange(int number)
 {
-    return (number > 0 && number < 15) ? true : false;
+    return (number > 0 && number <= 15) ? true : false;
 }
 
 void printCol(int* col)
@@ -135,6 +135,6 @@ void printColNode(colNode* colNode)
 {
     printf("Column = ");
     printCol(colNode->col);
-    printf("\t- Hits: %d", colNode->hits);
+    printf("- Hits: %d", colNode->hits);
     printf("\n");
 }
