@@ -25,6 +25,7 @@ void freeList(colList colList);
 void checkMemoryAllocation(void* ptr);
 void firstOption();
 void getListFromUser(colList* lstC, int numOfCols);
+void getListFromAutomator(colList* colLst, int numOfCols);
 int* getLotteryResult();
 void lookupForHits(pList* participants, int* lotteryResult, int** sum);
 void checkHitsForParticipant(Participant* p, int* lotteryResult, int** arr);
@@ -109,7 +110,7 @@ void printMostSuccessfulParticipant(pList* participants)
         }
         p = p->next;
     }
-    printf("The participant with the best hit average is: %s, with %f hits", bestName, bestHitsAvg);
+    printf("The participant with the best hit average is: %s, with %.2f hits", bestName, bestHitsAvg);
 }
 
 
@@ -310,12 +311,7 @@ int getCols(colList* colLst, int lotteryMode)
         getListFromUser(colLst, N);
         break;
     case AUTO:
-        for (int col = 0; col < N; col++)
-        {
-            int* autoCol = getAutomaticCol();
-            insertDataToEndList(colLst, autoCol);
-            colLst->tail->hits = 0;
-        }
+        getListFromAutomator(colLst, N);
         break;
     default:
         break;
@@ -323,6 +319,15 @@ int getCols(colList* colLst, int lotteryMode)
     return N;
 }
 
+void getListFromAutomator(colList* colLst, int numOfCols)
+{
+    for (int col = 0; col < numOfCols; col++)
+    {
+        int* autoCol = getAutomaticCol();
+        insertDataToEndList(colLst, autoCol);
+        colLst->tail->hits = 0;
+    }
+}
 
 void checkMemoryAllocation(void* ptr)
 {
