@@ -5,11 +5,13 @@
 #include "colList.h"
 #include "participants.h"
 #include "utils.h"
+#include <string.h>
 
 #define MANUAL 1
 #define AUTO 2
 #define WIN "windows"
 #define UNKNOWN "unknown"
+#define FILENAME "result.bin"
 
 #if defined _WIN32
 #define PLATFORM WIN
@@ -17,8 +19,10 @@
 #define PLATFORM UNKNOWN
 #endif
 
+typedef unsigned char BYTE;
+
 void showMenu();
-pList* getParticipants();
+pList* getParticipants(int** numOfAllCols, int* numOfParticipants);
 int getLotteryMode();
 int getCols(colList* colLst, int lotteryMode);
 char* getName();
@@ -37,6 +41,11 @@ void MergeSort(colNode** headRef);
 colNode* SortedMerge(colNode* head1, colNode* head2);
 void middle(colNode* source, colNode** frontRef, colNode** backRef);
 void printSumOfHits(int* arr);
+void saveResultsToBfile(pList* participants, int* numOfCols, int* lotteryResult, int numOfParticipants);
+BYTE* singleColCompression(int* col);
+void secondOption();
+int* singleColDecompression(BYTE* compressedCol);
+
 
 void main()
 {
@@ -46,6 +55,9 @@ void main()
 
 void showMenu()
 {
+    if (PLATFORM == "windows")
+        system("cls");
+
     int userChoice;
     printf("Please choose one of the following option:\n");
     printf("1. Enter number of participants\n");
@@ -62,28 +74,163 @@ void showMenu()
         firstOption();
         break;
     case 2:
-
+        secondOption();
         break;
     case 3:
         exit(0);
         break;
     default:
+        exitWithMessage("Invalid input");
         break;
     }
 
 }
 
+void secondOption()
+{
+    FILE* bf;
+    int numOfParticipants, nameLen, numOfCols;
+    pList* participants = (pList*)ourMalloc(sizeof(pList));
+    makeEmptyPList(participants);
+
+    bf = fopen(FILENAME, "rb");
+    if (bf == NULL)
+    {
+        exitWithMessage("The lottery has not yet taken place\n");
+    }
+    fread(&numOfParticipants, sizeof(int), 1, bf);
+    for(int i=0; i<numOfParticipants; i++)
+    {
+        colList* currColList = (colList*)ourMalloc(sizeof(colList));
+        makeEmptyColList(currColList);
+        fread(&nameLen, sizeof(int), 1, bf);//read name length
+        char* participantName = (char*)ourMalloc(sizeof(char) * (nameLen + 1));//allocation for name  
+        fread(participantName, sizeof(char), nameLen, bf);//read name
+        participantName[nameLen] = '\0';
+
+        Data* currParData = createDataForParticipant(participantName,*currColList);
+        insertPDataToEndPList(participants, currParData);
+
+        fread(&numOfCols, sizeof(int), 1, bf);
+        
+        for (int j = 0; j < numOfCols; j++)
+        {
+            BYTE* compressedCol = (BYTE*)ourMalloc(sizeof(BYTE) * 3);
+            fread(compressedCol, sizeof(BYTE), 3, bf);
+            int* decompressedCol = singleColDecompression(compressedCol);
+            insertDataToEndList(&(currParData->cols), decompressedCol);
+        }
+    }
+    BYTE* winCompressedCol = (BYTE*)ourMalloc(sizeof(BYTE) * 3);
+    fread(winCompressedCol, sizeof(BYTE), 3, bf);
+    int* winDecompressedCol = singleColDecompression(winCompressedCol);
+
+    int** sumOfHits = (int**)ourMalloc(sizeof(int*));
+
+    lookupForHits(participants, winDecompressedCol, sumOfHits);
+    printPList(*participants);
+    printf("The winning col is: ");
+    printCol(winDecompressedCol);
+}
+
 void firstOption()
 {
+    char userWilling;
     int** sumOfHits;
+    int** numOfAllColsArr; //how many cols for each p
+    int* numOfParticipants;
+
+    numOfAllColsArr = (int**)ourMalloc(sizeof(int*));
+    numOfParticipants = (int*)ourMalloc(sizeof(int));
     sumOfHits = (int**)ourMalloc(sizeof(int*));
-    pList* participants = getParticipants();
+    pList* participants = getParticipants(numOfAllColsArr, numOfParticipants);
     int* lotteryResult = getLotteryResult();
+   
     lookupForHits(participants, lotteryResult, sumOfHits);
     sortColsByHits(participants);
-    //printPList(*participants);
+    printPList(*participants);
     printSumOfHits(*sumOfHits);
     printMostSuccessfulParticipant(participants);
+    
+    printf("Would you like to keep the latest lottery result (Y/N)?\n");
+    getchar();
+    scanf("%c", &userWilling);
+    switch (userWilling)
+    {
+    case 'Y':
+        saveResultsToBfile(participants, *numOfAllColsArr, lotteryResult, *numOfParticipants);
+        showMenu();
+        break;
+    case 'N':
+        exitWithMessage("Thank you! See you next time\n");
+        break;
+    default:
+        exitWithMessage("Invalid input. exiting\n");
+        break;
+    }
+}
+void saveResultsToBfile(pList* participants, int* numOfCols, int* lotteryResult, int numOfParticipants)
+{
+    FILE* bf;
+    bf = ourFileOpen(FILENAME, "wb");
+
+    fwrite(&numOfParticipants, sizeof(int), 1, bf);
+
+    Participant* currP = participants->head;
+    int currPNameLen = 0;
+    int pInd = 0;
+    int currNumOfCols = 0;
+
+    while (currP != NULL)
+    {
+        currPNameLen = strlen(currP->data->name);
+        currNumOfCols = numOfCols[pInd++];
+        colNode* currCol = currP->data->cols.head;
+
+        fwrite(&currPNameLen, sizeof(int), 1, bf);
+        fwrite(currP->data->name, sizeof(char), currPNameLen, bf);
+        fwrite(&currNumOfCols, sizeof(int), 1, bf);
+        while (currCol != NULL)
+        {
+            BYTE* compressedCol = singleColCompression(currCol->col);
+            fwrite(compressedCol, sizeof(BYTE), 3, bf);
+            currCol = currCol->next;
+        }
+        currP = currP->next;
+    }
+    BYTE* compressedResult = singleColCompression(lotteryResult);
+    fwrite(compressedResult, sizeof(BYTE), 3, bf);
+    ourFileClose(bf);
+}
+
+BYTE* singleColCompression(int* col)
+{
+    int i, j;
+    int currVal, nextVal;
+    BYTE* shortCol = (BYTE*)ourMalloc(sizeof(char) * 3);
+
+    for (i = j= 0; i < 3; i++, j+=2) //i for byte array
+    {
+        currVal = col[j];
+        nextVal = col[j + 1] ;
+
+        shortCol[i] = currVal << 4 | nextVal;
+    }
+    return shortCol;
+}
+
+int* singleColDecompression(BYTE* compressedCol)
+{
+    int i, j;
+    int* longCol = (int*)ourMalloc(sizeof(int) * MAX_NUM_IN_COLS);
+    BYTE rightMask = 0x0F;
+    for (i = j = 0; i < 3; i++, j+=2) //i for byte array
+    {
+        int val = compressedCol[i];
+        longCol[j] = (val >> 4) & rightMask;
+        longCol[j + 1] = val & rightMask;
+    }
+    return longCol;
 }
 
 void printMostSuccessfulParticipant(pList* participants)
@@ -114,7 +261,7 @@ void printMostSuccessfulParticipant(pList* participants)
         }
         p = p->next;
     }
-    printf("The participant with the best hit average is: %s, with %.2f hits", bestName, bestHitsAvg);
+    printf("The participant with the best hit average is: %s, with %.2f hits\n\n", bestName, bestHitsAvg);
 }
 
 
@@ -192,7 +339,7 @@ void middle(colNode* source, colNode** frontRef, colNode** backRef)
 void lookupForHits(pList* participants, int* lotteryResult, int** sum)
 {
     Participant* p = participants->head;
-    *sum = (int*)calloc(sizeof(int), 7);
+    *sum = (int*)ourCalloc(sizeof(int), 7);
    // check memory
     while (p != NULL)
     {
@@ -236,35 +383,36 @@ int* getLotteryResult()
     return result;
 }
 
-pList* getParticipants()
+pList* getParticipants(int** numOfAllCols, int* numOfParticipants)
 {
     pList* pLst = (pList*)ourMalloc(sizeof(pList));
     makeEmptyPList(pLst); //make empty participants list
 
+
     Data* currData;
 
     colList colLst;
-    int numOfParticipants;
     int lotteryMode;
     int i, pIndex;
     char* name;
 
     printf("Please enter the number of participants\n");
-    scanf("%d", &numOfParticipants);
+    scanf("%d", numOfParticipants);
 
-    int* numOfCols = (int*)ourMalloc(sizeof(int) * numOfParticipants);
+    *numOfAllCols = (int*)ourMalloc(sizeof(int) * (*numOfParticipants));
 
-    for (i = 0, pIndex = 0; i < numOfParticipants; i++, pIndex ++)
+
+    for (i = 0, pIndex = 0; i < *numOfParticipants; i++, pIndex ++)
     {
         name = getName();
         makeEmptyColList(&colLst);
         currData = createDataForParticipant(name, colLst);
         insertPDataToEndPList(pLst, currData);
         lotteryMode = getLotteryMode();
-        numOfCols[pIndex] = getCols(&pLst->tail->data->cols, lotteryMode); //OrG needs to continue
+        (*numOfAllCols)[pIndex] = getCols(&pLst->tail->data->cols, lotteryMode);
+       
         printf("\n\n");
     }
-    
     return pLst;
 }
 
@@ -329,7 +477,6 @@ void getListFromAutomator(colList* colLst, int numOfCols)
     {
         int* autoCol = getAutomaticCol();
         insertDataToEndList(colLst, autoCol);
-        colLst->tail->hits = 0;
     }
 }
 
