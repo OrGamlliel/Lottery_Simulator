@@ -102,7 +102,7 @@ void freePList(pList pList)
     free(p);
 }
 
-printPartipant(Participant* p)
+void printPartipant(Participant* p)
 {
     colNode* ptr = p->data->cols.head;
     printf("Name: %s:\n", p->data->name);

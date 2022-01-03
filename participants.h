@@ -40,6 +40,6 @@ void insertPNodeToEndList(pList* pList, Participant* newTail);
 void insertDataToStartPList(pList* pList, Data* participantData);
 void insertParticipantToHead(pList* pList, Participant* newHead);
 void printPList(pList pList);
-printPartipant(Participant* p);
+void printPartipant(Participant* p);
 
 #endif // participants_h
