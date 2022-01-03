@@ -26,8 +26,6 @@ colNode* createNode(int* data, int hits, colNode* next)
 
 void insertNodeToEndList(colList* colList, colNode* newTail)
 {
-   // newTail->next = NULL;
-
     if (isEmptyList(*colList))
         colList->head = colList->tail = newTail;
     else
@@ -44,24 +42,40 @@ void insertDataToEndList(colList* colList, int* col)
     insertNodeToEndList(colList, newTail);
 }
 
-void freeList(colList colList)
+//void freeList(colList* colList)
+//{
+//    colNode* p, * q;
+//
+//    if (isEmptyList(colList))
+//        return;
+//
+//    p = colList.head;
+//
+//    while (p->next != NULL)
+//    {
+//        q = p;
+//        p = p->next;
+//        free(q);
+//    }
+//    free(p);
+//}
+
+void freeList(colList* lst)
 {
-    colNode* p, * q;
+    colNode* curr;
+    colNode* q;
+    curr = lst->head;
 
-    if (isEmptyList(colList))
-        return;
-
-    p = colList.head;
-
-    while (p->next != NULL)
+    while (curr != NULL)
     {
-        q = p;
-        p = p->next;
-        free(q);
+        q = curr->next;
+        free(curr->col);
+        free(curr);
+        curr = q;
     }
-    free(p);
+    lst->head = NULL;
+    lst->tail = NULL;
 }
-
 
 int* getAutomaticCol()
 {
@@ -107,7 +121,7 @@ void printCol(int* col)
     {
         if (i == 0)
             printf("[");
-        printf("%d", col[i]);
+        printf("%.2d", col[i]);
         if (i < 5)
             printf(",");
         else if (i == 5)
