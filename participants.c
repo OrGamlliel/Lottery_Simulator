@@ -76,8 +76,8 @@ void insertParticipantToHead(pList* pList, Participant* newHead) //insert node t
 void printPList(pList pList)
 {
     Participant* p;
-
-    printf("The list of participants is:\n");
+    
+    printf(ANSI_COLOR_RED "PARTICIPANTS:" ANSI_COLOR_RESET "\n\n");
 
     for (p = pList.head; p != NULL; p = p->next)
         printPartipant(p);
@@ -105,7 +105,7 @@ void freePList(pList pList)
 printPartipant(Participant* p)
 {
     colNode* ptr = p->data->cols.head;
-    printf("%s:\n", p->data->name);
+    printf("Name: %s:\n", p->data->name);
     
     while (ptr != NULL)
     {
