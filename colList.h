@@ -26,7 +26,7 @@ void insertNodeToEndList(colList* colList, colNode* newTail);
 int* getAutomaticCol();
 bool isDifferent(int* arr, int val, int index);
 bool isWithinRange(int number);
-void printCol(int* col);
+void printCol(int* col, bool align);
 void printColNode(colNode*);
 
 #endif // colList_h

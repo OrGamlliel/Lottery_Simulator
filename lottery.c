@@ -247,7 +247,7 @@ int* getLotteryResult()
     int* result = getAutomaticCol();
 
     printf("The winning column is:\t");
-    printCol(result);
+    printCol(result,false);
     printf("\n\n");
 
     return result;

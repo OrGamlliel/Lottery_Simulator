@@ -115,13 +115,13 @@ bool isWithinRange(int number)
     return (number > 0 && number <= 15) ? true : false;
 }
 
-void printCol(int* col)
+void printCol(int* col, bool align)
 {
     for (int i = 0; i < 6; i++)
     {
         if (i == 0)
             printf("[");
-        printf("%.2d", col[i]);
+        align ? printf("%2d", col[i]) : printf("%d", col[i]);
         if (i < 5)
             printf(",");
         else if (i == 5)
@@ -131,8 +131,7 @@ void printCol(int* col)
 
 void printColNode(colNode* colNode)
 {
-    printf("Column = ");
-    printCol(colNode->col);
+    printCol(colNode->col, true);
     printf("- Hits: %d", colNode->hits);
     printf("\n");
 }

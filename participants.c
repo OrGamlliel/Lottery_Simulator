@@ -104,11 +104,13 @@ void freePList(pList pList)
 
 void printPartipant(Participant* p)
 {
+    int index = 1;
     colNode* ptr = p->data->cols.head;
     printf("Name: %s:\n", p->data->name);
     
     while (ptr != NULL)
     {
+        printf("Col %d: ", index++);
         printColNode(ptr);
         ptr = ptr->next;
     }

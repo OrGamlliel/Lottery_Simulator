@@ -47,7 +47,7 @@ void showMenu(latestResult* savedRes)
         {
             printPList(*(savedRes->participants));
             printf("The winning col is: ");
-            printCol(savedRes->lotteryResult);
+            printCol(savedRes->lotteryResult,false);
             printf("\n\n\n");
             //keep winner and his score
         }
@@ -147,6 +147,6 @@ void secondOption()
     lookupForHits(participants, winDecompressedCol, sumOfHits);
     printPList(*participants);
     printf("The winning col is: ");
-    printCol(winDecompressedCol);
+    printCol(winDecompressedCol,false);
     printf("\n");
 }
