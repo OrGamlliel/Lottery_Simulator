@@ -9,6 +9,8 @@
 
 #define MANUAL 1
 #define AUTO 2
+#define SHORT_COL 3
+
 #define WIN "windows"
 #define UNKNOWN "unknown"
 #define FILENAME "result.bin"
@@ -19,16 +21,24 @@
 #define PLATFORM UNKNOWN
 #endif
 
+typedef struct latestRes
+{
+    pList* participants;
+    int* lotteryResult;
+    Participant* winner;//shall we keep the winner as well?
+}latestResult;
+
 typedef unsigned char BYTE;
 
-void showMenu();
+void start();
+void showMenu(latestResult* savedRes);
 pList* getParticipants(int** numOfAllCols, int* numOfParticipants);
 int getLotteryMode();
 int getCols(colList* colLst, int lotteryMode);
 char* getName();
-void freeList(colList colList);
+void freeList(colList* colList);
 void checkMemoryAllocation(void* ptr);
-void firstOption();
+latestResult* firstOption();
 void getListFromUser(colList* lstC, int numOfCols);
 void getListFromAutomator(colList* colLst, int numOfCols);
 int* getLotteryResult();
@@ -50,10 +60,15 @@ int* singleColDecompression(BYTE* compressedCol);
 void main()
 {
     srand(time(NULL));
-    showMenu();
+    start();
 }
 
-void showMenu()
+void start()
+{
+    showMenu(NULL);
+}
+
+void showMenu(latestResult* savedRes)
 {
     if (PLATFORM == "windows")
         system("cls");
@@ -71,10 +86,21 @@ void showMenu()
     switch (userChoice)
     {
     case 1:
-        firstOption();
-        break;
+        savedRes = firstOption();
+         break;
     case 2:
-        secondOption();
+        if (savedRes == NULL)//read from file
+        {
+            secondOption();
+        }
+        else
+        {
+            printPList(*(savedRes->participants));
+            printf("The winning col is: ");
+            printCol(savedRes->lotteryResult);
+            printf("\n\n\n");
+            //keep winner and his score
+        }
         break;
     case 3:
         exit(0);
@@ -99,7 +125,7 @@ void secondOption()
         exitWithMessage("The lottery has not yet taken place\n");
     }
     fread(&numOfParticipants, sizeof(int), 1, bf);
-    for(int i=0; i<numOfParticipants; i++)
+    for (int i = 0; i < numOfParticipants; i++)
     {
         colList* currColList = (colList*)ourMalloc(sizeof(colList));
         makeEmptyColList(currColList);
@@ -115,14 +141,14 @@ void secondOption()
         
         for (int j = 0; j < numOfCols; j++)
         {
-            BYTE* compressedCol = (BYTE*)ourMalloc(sizeof(BYTE) * 3);
-            fread(compressedCol, sizeof(BYTE), 3, bf);
+            BYTE* compressedCol = (BYTE*)ourMalloc(sizeof(BYTE) * SHORT_COL);
+            fread(compressedCol, sizeof(BYTE), SHORT_COL, bf);
             int* decompressedCol = singleColDecompression(compressedCol);
             insertDataToEndList(&(currParData->cols), decompressedCol);
         }
     }
-    BYTE* winCompressedCol = (BYTE*)ourMalloc(sizeof(BYTE) * 3);
-    fread(winCompressedCol, sizeof(BYTE), 3, bf);
+    BYTE* winCompressedCol = (BYTE*)ourMalloc(sizeof(BYTE) * SHORT_COL);
+    fread(winCompressedCol, sizeof(BYTE), SHORT_COL, bf);
     int* winDecompressedCol = singleColDecompression(winCompressedCol);
 
     int** sumOfHits = (int**)ourMalloc(sizeof(int*));
@@ -131,10 +157,13 @@ void secondOption()
     printPList(*participants);
     printf("The winning col is: ");
     printCol(winDecompressedCol);
+    printf("\n");
 }
 
-void firstOption()
+latestResult* firstOption()
 {
+    latestResult* saveRes = (latestResult*)ourMalloc(sizeof(latestResult));
+
     char userWilling;
     int** sumOfHits;
     int** numOfAllColsArr; //how many cols for each p
@@ -143,32 +172,34 @@ void firstOption()
     numOfAllColsArr = (int**)ourMalloc(sizeof(int*));
     numOfParticipants = (int*)ourMalloc(sizeof(int));
     sumOfHits = (int**)ourMalloc(sizeof(int*));
-    pList* participants = getParticipants(numOfAllColsArr, numOfParticipants);
-    int* lotteryResult = getLotteryResult();
-   
-    lookupForHits(participants, lotteryResult, sumOfHits);
-    sortColsByHits(participants);
-    printPList(*participants);
+    saveRes->participants = getParticipants(numOfAllColsArr, numOfParticipants);
+    saveRes->lotteryResult = getLotteryResult();
+
+    lookupForHits(saveRes->participants, saveRes->lotteryResult, sumOfHits);
+    sortColsByHits(saveRes->participants);
+    printPList(*(saveRes->participants));
     printSumOfHits(*sumOfHits);
-    printMostSuccessfulParticipant(participants);
+    printMostSuccessfulParticipant(saveRes->participants);
     
-    printf("Would you like to keep the latest lottery result (Y/N)?\n");
+    printf("Would you like to save to file the latest lottery result (Y/N)?\n");//we are goung to keep the lottery result anyway, we need to mention if to file- change wording
     getchar();
     scanf("%c", &userWilling);
     switch (userWilling)
     {
     case 'Y':
-        saveResultsToBfile(participants, *numOfAllColsArr, lotteryResult, *numOfParticipants);
-        showMenu();
+        saveResultsToBfile(saveRes->participants, *numOfAllColsArr, saveRes->lotteryResult, *numOfParticipants);
+        showMenu(saveRes);
         break;
     case 'N':
-        exitWithMessage("Thank you! See you next time\n");
+        showMenu(saveRes);//The file won't be saved, but the latest lottery result will still exist and can be used
         break;
     default:
-        exitWithMessage("Invalid input. exiting\n");
+        exitWithMessage("Invalid input. exiting\n"); //need to decide
         break;
     }
+    return saveRes;
 }
+
 void saveResultsToBfile(pList* participants, int* numOfCols, int* lotteryResult, int numOfParticipants)
 {
     FILE* bf;
@@ -193,13 +224,13 @@ void saveResultsToBfile(pList* participants, int* numOfCols, int* lotteryResult,
         while (currCol != NULL)
         {
             BYTE* compressedCol = singleColCompression(currCol->col);
-            fwrite(compressedCol, sizeof(BYTE), 3, bf);
+            fwrite(compressedCol, sizeof(BYTE), SHORT_COL, bf);
             currCol = currCol->next;
         }
         currP = currP->next;
     }
     BYTE* compressedResult = singleColCompression(lotteryResult);
-    fwrite(compressedResult, sizeof(BYTE), 3, bf);
+    fwrite(compressedResult, sizeof(BYTE), SHORT_COL, bf);
     ourFileClose(bf);
 }
 
@@ -207,9 +238,9 @@ BYTE* singleColCompression(int* col)
 {
     int i, j;
     int currVal, nextVal;
-    BYTE* shortCol = (BYTE*)ourMalloc(sizeof(char) * 3);
+    BYTE* shortCol = (BYTE*)ourMalloc(sizeof(char) * SHORT_COL);
 
-    for (i = j= 0; i < 3; i++, j+=2) //i for byte array
+    for (i = j= 0; i < SHORT_COL; i++, j+=2) //i for byte array
     {
         currVal = col[j];
         nextVal = col[j + 1] ;
@@ -224,7 +255,7 @@ int* singleColDecompression(BYTE* compressedCol)
     int i, j;
     int* longCol = (int*)ourMalloc(sizeof(int) * MAX_NUM_IN_COLS);
     BYTE rightMask = 0x0F;
-    for (i = j = 0; i < 3; i++, j+=2) //i for byte array
+    for (i = j = 0; i < SHORT_COL; i++, j+=2) //i for byte array
     {
         int val = compressedCol[i];
         longCol[j] = (val >> 4) & rightMask;
@@ -299,7 +330,7 @@ colNode* SortedMerge(colNode* head1, colNode* head2)
         return (head2);
     else if (head2 == NULL)
         return (head1);
-    if (head1->hits > head2->hits)
+    if (head1->hits >= head2->hits)
     {
         res = head1;
         res->next = SortedMerge(head1->next, head2);
@@ -512,9 +543,9 @@ void getListFromUser(colList* lstC, int numOfCols)
                 printf("Sorry your last value is invalid, please enter another value\n");
         }
         insertDataToEndList(lstC, currCol);
-        lstC->tail->hits = 0;
     }
 }
+
 void printSumOfHits(int* arr)
 {
     for (int i = 0; i < 7; i++)
