@@ -1,5 +1,9 @@
-#include "colList.h"
+/* LOTTERY PROJECT
+Created by:
+Avital Rubichi 301789178
+Or Gamliel 209161603*/
 
+#include "colList.h"
 
 void makeEmptyColList(colList* colst)
 {
@@ -42,24 +46,6 @@ void insertDataToEndList(colList* colList, int* col)
     insertNodeToEndList(colList, newTail);
 }
 
-//void freeList(colList* colList)
-//{
-//    colNode* p, * q;
-//
-//    if (isEmptyList(colList))
-//        return;
-//
-//    p = colList.head;
-//
-//    while (p->next != NULL)
-//    {
-//        q = p;
-//        p = p->next;
-//        free(q);
-//    }
-//    free(p);
-//}
-
 void freeList(colList* lst)
 {
     colNode* curr;
@@ -69,7 +55,8 @@ void freeList(colList* lst)
     while (curr != NULL)
     {
         q = curr->next;
-        free(curr->col);
+        if (curr->col != NULL)
+            free(curr->col);
         free(curr);
         curr = q;
     }

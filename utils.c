@@ -1,3 +1,8 @@
+/* LOTTERY PROJECT
+Created by:
+Avital Rubichi 301789178
+Or Gamliel 209161603*/
+
 #include "utils.h"
 
 //The function opens a file named fileName in a specific mode, and validate the success of opening.

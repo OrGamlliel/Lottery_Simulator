@@ -1,9 +1,7 @@
-//
-//  mergeSort.h
-//  finalProjectC
-//
-//  Created by Avital Rubichi on 03/01/2022.
-//
+/* LOTTERY PROJECT
+Created by:
+Avital Rubichi 301789178
+Or Gamliel 209161603*/
 
 #ifndef mergeSort_h
 #define mergeSort_h

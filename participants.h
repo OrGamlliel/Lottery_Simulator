@@ -1,14 +1,10 @@
+/* LOTTERY PROJECT
+Created by:
+Avital Rubichi 301789178
+Or Gamliel 209161603*/
+
 #ifndef participants_h
 #define participants_h
-
-
-#define ANSI_COLOR_RED     "\x1b[31m"
-#define ANSI_COLOR_GREEN   "\x1b[32m"
-#define ANSI_COLOR_YELLOW  "\x1b[33m"
-#define ANSI_COLOR_BLUE    "\x1b[34m"
-#define ANSI_COLOR_MAGENTA "\x1b[35m"
-#define ANSI_COLOR_CYAN    "\x1b[36m"
-#define ANSI_COLOR_RESET   "\x1b[0m"
 
 #include "colList.h"
 #include "utils.h"
@@ -37,9 +33,9 @@ Data* createDataForParticipant(char* name, colList cols);
 Participant* createNewParticipant(Data* participantData, Participant* next);
 void insertPDataToEndPList(pList* pList, Data* participantData);
 void insertPNodeToEndList(pList* pList, Participant* newTail);
-void insertDataToStartPList(pList* pList, Data* participantData);
-void insertParticipantToHead(pList* pList, Participant* newHead);
 void printPList(pList pList);
 void printPartipant(Participant* p);
+void freePList(pList pList);
+void freeParticipant(Participant* p);
 
 #endif // participants_h

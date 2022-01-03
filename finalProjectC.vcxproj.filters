@@ -15,9 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="implementation.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="participants.c">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -25,6 +22,18 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="colList.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="lottery.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="main.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="mergeSort.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="screens.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -36,6 +45,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="colList.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="lottery.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="mergeSort.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="screens.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

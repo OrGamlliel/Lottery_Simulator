@@ -1,3 +1,8 @@
+/* LOTTERY PROJECT
+Created by:
+Avital Rubichi 301789178
+Or Gamliel 209161603*/
+
 #ifndef colList_h
 #define colList_h
 
@@ -28,5 +33,6 @@ bool isDifferent(int* arr, int val, int index);
 bool isWithinRange(int number);
 void printCol(int* col, bool align);
 void printColNode(colNode*);
+void freeList(colList* lst);
 
 #endif // colList_h

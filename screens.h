@@ -1,13 +1,12 @@
-//
-//  main.h
-//  finalProjectC
-//
-//  Created by Avital Rubichi on 03/01/2022.
-//
+/* LOTTERY PROJECT
+Created by:
+Avital Rubichi 301789178
+Or Gamliel 209161603*/
+
 #define _CRT_SECURE_NO_WARNINGS
 
-#ifndef main_h
-#define main_h
+#ifndef screens_h
+#define screens_h
 
 #define WIN "windows"
 #define UNKNOWN "unknown"
@@ -31,5 +30,7 @@ void showMenu(latestResult* savedRes);
 void freeList(colList* colList);
 latestResult* firstOption();
 void secondOption();
+void askToSave(int** numOfAllColsArr, int* numOfParticipants, latestResult* saveRes);
 
-#endif /* main_h */
+
+#endif

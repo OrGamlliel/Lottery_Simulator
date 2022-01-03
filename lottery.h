@@ -1,9 +1,7 @@
-//
-//  lottery.h
-//  finalProjectC
-//
-//  Created by Avital Rubichi on 03/01/2022.
-//
+/* LOTTERY PROJECT
+Created by:
+Avital Rubichi 301789178
+Or Gamliel 209161603*/
 
 #ifndef lottery_h
 #define lottery_h
@@ -24,7 +22,6 @@ typedef struct latestRes
 {
     pList* participants;
     int* lotteryResult;
-    Participant* winner;//shall we keep the winner as well?
 }latestResult;
 
 pList* getParticipants(int** numOfAllCols, int* numOfParticipants);
@@ -42,5 +39,6 @@ int* getLotteryResult();
 void lookupForHits(pList* participants, int* lotteryResult, int** sum);
 void checkHitsForParticipant(Participant* p, int* lotteryResult, int** arr);
 void sortColsByHits(pList* participants);
+void freeSavedRes(latestResult* savedRes);
 
 #endif /* lottery_h */

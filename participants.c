@@ -1,3 +1,8 @@
+/* LOTTERY PROJECT
+Created by:
+Avital Rubichi 301789178
+Or Gamliel 209161603*/
+
 #include "participants.h"
 #include "utils.h"
 
@@ -58,21 +63,6 @@ void insertPNodeToEndList(pList* pList, Participant* newTail)
     }
 }
 
-void insertDataToStartPList(pList* pList, Data* participantData) //insert data to start p list
-{
-    Participant* newHead;
-    newHead = createNewParticipant(participantData, NULL);
-    insertParticipantToHead(pList, newHead);
-}
-
-void insertParticipantToHead(pList* pList, Participant* newHead) //insert node to start p list
-{
-    newHead->next = pList->head;
-    if (pList->tail == NULL)
-        pList->tail = newHead;
-    pList->head = newHead;
-}
-
 void printPList(pList pList)
 {
     Participant* p;
@@ -97,9 +87,26 @@ void freePList(pList pList)
     {
         q = p;
         p = p->next;
+        freeParticipant(q);
         free(q);
     }
     free(p);
+}
+
+void freeParticipant(Participant* p)
+{
+    if (p != NULL)
+    {
+        if (p->data != NULL)
+        {
+            if (p->data->name != NULL)
+            {
+                free(p->data->name);
+            }
+            free(p->data);
+        }
+        freeList(&p->data->cols);
+    }
 }
 
 void printPartipant(Participant* p)

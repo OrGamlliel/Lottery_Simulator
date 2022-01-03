@@ -1,12 +1,12 @@
-//
-//  lottery.c
-//  finalProjectC
-//
-//  Created by Avital Rubichi on 03/01/2022.
-//
+/* LOTTERY PROJECT
+Created by:
+Avital Rubichi 301789178
+Or Gamliel 209161603*/
 
 #include "lottery.h"
 
+/*this function creates the participants list,
+returns updated number of participants and updated array that includes how many col each participans has*/
 pList* getParticipants(int** numOfAllCols, int* numOfParticipants)
 {
     pList* pLst = (pList*)ourMalloc(sizeof(pList));
@@ -24,16 +24,14 @@ pList* getParticipants(int** numOfAllCols, int* numOfParticipants)
 
     *numOfAllCols = (int*)ourMalloc(sizeof(int) * (*numOfParticipants));
 
-
+    //for each participan get name and cols list
     for (i = 0, pIndex = 0; i < *numOfParticipants; i++, pIndex ++)
     {
         name = getName();
         makeEmptyColList(&colLst);
         currData = createDataForParticipant(name, colLst);
         insertPDataToEndPList(pLst, currData);
-        lotteryMode = getLotteryMode();
-        if (lotteryMode != MANUAL && lotteryMode != AUTO)
-            exitWithMessage("Invalid input. Exiting\n");
+        lotteryMode = getLotteryMode(); //choose manual or auto
 
         (*numOfAllCols)[pIndex] = getCols(&pLst->tail->data->cols, lotteryMode);
        
@@ -42,15 +40,22 @@ pList* getParticipants(int** numOfAllCols, int* numOfParticipants)
     return pLst;
 }
 
+/* The function asks the user to insert lottery mode (auto or manual) and returns the wanted result */
 int getLotteryMode()
 {
     int lotteryMode;
     printf("1. Manual lottery\n");
     printf("2. Auto lottery\n");
     scanf("%d", &lotteryMode);
+    if (lotteryMode != 1 && lotteryMode != 2)
+    {
+        printf("Invalid mode was chosen. Please try again:\n");
+        return getLotteryMode();
+    }
     return lotteryMode;
 }
 
+/* The function asks the user to insert how many cols he would like to insert, then gets the list of cols */
 int getCols(colList* colLst, int lotteryMode)
 {
     int N; //desired num of columns
@@ -68,6 +73,7 @@ int getCols(colList* colLst, int lotteryMode)
     return N;
 }
 
+/* The function prints the info of the most successful participant (has the highest avg of hits per cols */
 void printMostSuccessfulParticipant(pList* participants)
 {
     Participant* p = participants->head;
@@ -98,6 +104,7 @@ void printMostSuccessfulParticipant(pList* participants)
     printf("The participant with the best hit average is: %s, with %.2f hits\n\n", bestName, bestHitsAvg);
 }
 
+/* The function prints how many columns have each number of hits (0-6) */
 void printSumOfHits(int* arr)
 {
     for (int i = 0; i < 7; i++)
@@ -107,6 +114,7 @@ void printSumOfHits(int* arr)
     printf("\n\n");
 }
 
+/* The function asks the user to insert chosen manual col as a List */
 void getListFromUser(colList* lstC, int numOfCols)
 {
     int currChosenNum;
@@ -132,6 +140,7 @@ void getListFromUser(colList* lstC, int numOfCols)
     }
 }
 
+/* The function saves the lottery results to a .bin file*/
 void saveResultsToBfile(pList* participants, int* numOfCols, int* lotteryResult, int numOfParticipants)
 {
     FILE* bf;
@@ -164,8 +173,10 @@ void saveResultsToBfile(pList* participants, int* numOfCols, int* lotteryResult,
     BYTE* compressedResult = singleColCompression(lotteryResult);
     fwrite(compressedResult, sizeof(BYTE), SHORT_COL, bf);
     ourFileClose(bf);
+    free(compressedResult);
 }
 
+/* The function compresses a single col into 3 bytes */
 BYTE* singleColCompression(int* col)
 {
     int i, j;
@@ -182,6 +193,7 @@ BYTE* singleColCompression(int* col)
     return shortCol;
 }
 
+/* The function decompresses 3 bytes to a single col */
 int* singleColDecompression(BYTE* compressedCol)
 {
     int i, j;
@@ -196,6 +208,7 @@ int* singleColDecompression(BYTE* compressedCol)
     return longCol;
 }
 
+/* The function sorts the cols by hits desc.*/
 void sortColsByHits(pList* participants)
 {
     Participant* p = participants->head;
@@ -207,11 +220,11 @@ void sortColsByHits(pList* participants)
     }
 }
 
+/* The function lookups for hits and populates the hits field inside each col node */
 void lookupForHits(pList* participants, int* lotteryResult, int** sum)
 {
     Participant* p = participants->head;
     *sum = (int*)ourCalloc(sizeof(int), 7);
-   // check memory
     while (p != NULL)
     {
         checkHitsForParticipant(p, lotteryResult, sum);
@@ -219,6 +232,7 @@ void lookupForHits(pList* participants, int* lotteryResult, int** sum)
     }
 }
 
+/* The function compares the colList of participant to the winner lottery col, and counts the hits */
 void checkHitsForParticipant(Participant* p, int* lotteryResult, int** arr)
 {
     colNode* currCol = p->data->cols.head;
@@ -237,12 +251,13 @@ void checkHitsForParticipant(Participant* p, int* lotteryResult, int** arr)
                 }
             }
             isFound = false;
-        }//function to find num in array
+        }
         (*arr)[currCol->hits]++;
         currCol = currCol->next;
     }
 }
 
+/* The function decides on the winner column and prints it */
 int* getLotteryResult()
 {
     int* result = getAutomaticCol();
@@ -254,6 +269,7 @@ int* getLotteryResult()
     return result;
 }
 
+/* The function receives a participant name (unknown size) */
 char* getName()
 {
     int logSize = 0;
@@ -281,6 +297,7 @@ char* getName()
     return name;
 }
 
+/* The function gets an automated colList */
 void getListFromAutomator(colList* colLst, int numOfCols)
 {
     for (int col = 0; col < numOfCols; col++)
@@ -290,3 +307,14 @@ void getListFromAutomator(colList* colLst, int numOfCols)
     }
 }
 
+void freeSavedRes(latestResult* savedRes)
+{
+    if (savedRes != NULL)
+    {
+        if (savedRes->lotteryResult != NULL)
+            free(savedRes->lotteryResult);
+        if (savedRes->participants != NULL)
+            freePList(*savedRes->participants);
+        free(savedRes);
+    }
+}

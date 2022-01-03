@@ -1,14 +1,11 @@
-//
-//  mergeSort.c
-//  finalProjectC
-//
-//  Created by Avital Rubichi on 03/01/2022.
-//
+/* LOTTERY PROJECT
+Created by:
+Avital Rubichi 301789178
+Or Gamliel 209161603*/
 
 #include "mergeSort.h"
 
-
-/* sorts the linked list by changing links */
+// Sorts the linked list by changing links
 void MergeSort(colNode** headRef) {
     colNode* head = *headRef;
     colNode* newHead1;
@@ -24,6 +21,7 @@ void MergeSort(colNode** headRef) {
     *headRef = SortedMerge(newHead1, newHead2);
 }
 
+// A helper function
 colNode* SortedMerge(colNode* head1, colNode* head2)
 {
     colNode* res = NULL;
