@@ -31,18 +31,16 @@ void showMenu(latestResult* savedRes)
     scanf("%d", &userChoice);
 
     if (PLATFORM == "windows")
-        system("cls");
+        system("cls"); //We decided to clear screen for windows only (we suppose the program will run on Win)
 
     switch (userChoice)
     {
     case 1:
         savedRes = firstOption();
-         break;
+        break;
     case 2:
         if (savedRes == NULL)//read from file
-        {
             secondOption();
-        }
         else
         {
             printPList(*(savedRes->participants));

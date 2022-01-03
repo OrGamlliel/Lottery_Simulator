@@ -32,6 +32,9 @@ pList* getParticipants(int** numOfAllCols, int* numOfParticipants)
         currData = createDataForParticipant(name, colLst);
         insertPDataToEndPList(pLst, currData);
         lotteryMode = getLotteryMode();
+        if (lotteryMode != MANUAL && lotteryMode != AUTO)
+            exitWithMessage("Invalid input. Exiting\n");
+
         (*numOfAllCols)[pIndex] = getCols(&pLst->tail->data->cols, lotteryMode);
        
         printf("\n\n");
@@ -60,8 +63,6 @@ int getCols(colList* colLst, int lotteryMode)
         break;
     case AUTO:
         getListFromAutomator(colLst, N);
-        break;
-    default:
         break;
     }
     return N;
@@ -288,3 +289,4 @@ void getListFromAutomator(colList* colLst, int numOfCols)
         insertDataToEndList(colLst, autoCol);
     }
 }
+
